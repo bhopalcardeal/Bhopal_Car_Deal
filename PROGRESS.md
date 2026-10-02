@@ -1,0 +1,672 @@
+# Project Progress Log
+
+## Phase 0 — Setup
+- Status: Done
+- What was built:
+  - Scaffolding of Next.js 15.5 with App Router, TypeScript (strict mode enabled with `noUncheckedIndexedAccess`), Tailwind CSS v4 (`@tailwindcss/postcss`), and shadcn/ui configuration (`components.json`).
+  - Core tech stack dependencies installed: `@prisma/client`, `prisma`, `motion` (Framer Motion successor, `motion/react`), `zustand`, `@tanstack/react-query`, `react-hook-form`, `@hookform/resolvers`, `zod`, `lucide-react`, `class-variance-authority`, `clsx`, `tailwind-merge`, `prettier`, `prettier-plugin-tailwindcss`.
+  - Folder structure created: `app/(public)/`, `app/(admin)/`, `components/ui/`, `components/premium/`, `components/forms/`, `components/admin/`, `lib/db.ts`, `lib/validations/`, `lib/motion/`, `prisma/schema.prisma`.
+  - Database configuration: `prisma/schema.prisma` initialized with PostgreSQL provider and client generator, plus `.env.example` and `.env` containing connection string template; Prisma client generated (`prisma generate`).
+  - Base utilities: `lib/utils.ts` (`cn` helper), `lib/db.ts` (PrismaClient singleton), `lib/validations/index.ts`, `lib/motion/index.ts`.
+  - Initial layout & UI test: Root `app/layout.tsx`, `app/(public)/layout.tsx`, `app/(public)/page.tsx` with a verified shadcn `Button` component styled via Tailwind CSS v4, and `app/(admin)/layout.tsx`.
+  - Code hygiene tooling: `eslint.config.mjs` (flat config), strict `tsconfig.json`, `.prettierrc` with Tailwind plugin, `.gitignore`.
+  - Documentation: Root `README.md` with complete stack summary, directory structure, and setup instructions.
+- What was NOT built / deferred:
+  - Database models and migrations (deferred to Phase 2 per roadmap).
+  - Business logic, authentication, real forms, and specific marketplace views (deferred to subsequent phases per roadmap constraints).
+- Known issues or shortcuts taken:
+  - In `prisma/schema.prisma`, models are empty placeholders pending Phase 2 data modeling.
+  - Development PostgreSQL instance needs to be provisioned locally/remotely when ready to run migrations in Phase 2.
+- Files created or modified:
+  - `package.json`
+  - `package-lock.json`
+  - `tsconfig.json`
+  - `postcss.config.mjs`
+  - `eslint.config.mjs`
+  - `.prettierrc`
+  - `.prettierignore`
+  - `.gitignore`
+  - `.env.example`
+  - `.env`
+  - `next.config.ts`
+  - `components.json`
+  - `prisma/schema.prisma`
+  - `lib/db.ts`
+  - `lib/utils.ts`
+  - `lib/validations/index.ts`
+  - `lib/motion/index.ts`
+  - `components/ui/button.tsx`
+  - `components/premium/README.md`
+  - `components/forms/README.md`
+  - `components/admin/README.md`
+  - `app/globals.css`
+  - `app/layout.tsx`
+  - `app/(public)/layout.tsx`
+  - `app/(public)/page.tsx`
+  - `app/(admin)/layout.tsx`
+  - `README.md`
+  - `PROGRESS.md`
+- Next recommended step:
+  - Proceed with Phase 1: Design System & Shared Animation Primitives (shadcn base components, Vengeance UI components, `lib/motion/variants.ts`, Tailwind design tokens, and the `/style-guide` verification page).
+
+## Phase 1 — Design System
+- Status: Done
+- What was built:
+  - Installed and configured Radix UI packages: `@radix-ui/react-slot`, `@radix-ui/react-label`, `@radix-ui/react-select`, `@radix-ui/react-slider`, `@radix-ui/react-dialog`, `@radix-ui/react-tabs`, `@radix-ui/react-accordion`.
+  - Configured all 13 required shadcn/ui base components: `Button` (with Slot & CVA), `Input`, `Select`, `Slider`, `Dialog`, `Sheet`, `Skeleton`, `Table`, `Badge` (with featured & success variants), `Card`, `Tabs`, `Accordion`, `Form` (with `Label` and full react-hook-form integration).
+  - Built 3 Vengeance UI premium animated modules in `components/premium/`:
+    - `components/premium/marquee.tsx` (`Marquee`): Hardware-accelerated horizontal scrolling ticker with pause-on-hover for testimonials, trust metrics, and brand partner badges.
+    - `components/premium/hero-glow.tsx` (`HeroGlow`): Luxury ambient automotive glow, geometric grid mesh, and floating motion accent aura for hero banners.
+    - `components/premium/spotlight-card.tsx` (`SpotlightCard`): Interactive luxury car card featuring dynamic radial mouse-following spotlight glow and glassmorphic highlight.
+    - `components/premium/index.ts`: Barrel export for premium components.
+  - Implemented shared, reusable motion variants in `lib/motion/variants.ts` (`fadeUp`, `staggerContainer`, `scaleIn`, `slideInFromRight`) imported from `motion/react` with transform/opacity-only transitions to prevent layout thrashing.
+  - Defined design tokens in `app/globals.css`:
+    - Accent color: Automotive Crimson Red (`hsl(350 89% 55%)` / `#e11d48`). *We selected Automotive Crimson Red (`hsl(350 89% 55%)`) because it embodies high-performance automotive energy and urgency for bookings/offers while providing clean, high-contrast readability against both light and luxury dark surfaces per elitecarz.in's brand cues.*
+    - Neutral palette: Deep charcoal/slate (`#09090b` for dark mode, `#ffffff`/`#f8fafc` for light mode).
+    - Typography and spacing scale mapped into Tailwind CSS v4 `@theme`.
+    - Keyframes for marquee continuous scroll and accordion collapse/expand.
+  - Built the dev-only visual verification route at `app/(public)/style-guide/page.tsx` rendering every base component, Vengeance UI module, an interactive validated form with Zod schema, and an interactive motion replay trigger.
+- What was NOT built / deferred:
+  - Real application storefront pages (Home, Browse, Detail, Sell Car) deferred to subsequent phases per the roadmap.
+  - Server actions and database persistence for form submissions (deferred to Phase 2 and Phase 6).
+- Known issues or shortcuts taken:
+  - None; all components are strictly typed (`noUncheckedIndexedAccess: true`), ESLint reports 0 warnings or errors, and `next build` generates all static routes cleanly.
+- Files created or modified:
+  - `package.json`
+  - `package-lock.json`
+  - `app/globals.css`
+  - `lib/motion/variants.ts`
+  - `lib/motion/index.ts`
+  - `components/ui/button.tsx`
+  - `components/ui/input.tsx`
+  - `components/ui/badge.tsx`
+  - `components/ui/card.tsx`
+  - `components/ui/skeleton.tsx`
+  - `components/ui/table.tsx`
+  - `components/ui/select.tsx`
+  - `components/ui/slider.tsx`
+  - `components/ui/dialog.tsx`
+  - `components/ui/sheet.tsx`
+  - `components/ui/tabs.tsx`
+  - `components/ui/accordion.tsx`
+  - `components/ui/label.tsx`
+  - `components/ui/form.tsx`
+  - `components/premium/marquee.tsx`
+  - `components/premium/hero-glow.tsx`
+  - `components/premium/spotlight-card.tsx`
+  - `components/premium/index.ts`
+  - `app/(public)/style-guide/page.tsx`
+  - `PROGRESS.md`
+- Next recommended step:
+  - Proceed with Phase 2: Data Model & Prisma Schema (`prisma/schema.prisma` covering CarListing, SellerLead, BuyerEnquiry, AdminUser, and CMS entities with indexes, plus `prisma/seed.ts` containing ~20 realistic car listings and sample leads).
+
+## Phase 2 — Data Model
+- Status: Done
+- What was built:
+  - **Prisma Schema (`prisma/schema.prisma`)**: Implemented all 8 entities specified in PRD Section 8:
+    - `CarListing`: Primary car entity with specs, pricing, discount calculation, status, tags, cover image, and relation to `CarImage` and `BuyerEnquiry`.
+    - `CarImage`: 1-to-many ordered car photographs with `isCover` flag.
+    - `SellerLead`: "Sell Your Car" submissions capturing vehicle condition, expected price, photos, and internal staff notes.
+    - `BuyerEnquiry`: Lead captures for specific vehicles and general showroom callbacks.
+    - `AdminUser`: Dealership staff accounts with role-based access (`ADMIN` / `STAFF`) and bcrypt hashed passwords.
+    - `Banner`: Homepage promotional banners with sort ordering.
+    - `Testimonial`: Verified buyer reviews with rating and car model purchased.
+    - `FAQ`: Categorised FAQs (Pricing, Documentation, Warranty, Financing, Selling).
+    - `StaticPage`: CMS static policy pages (About Us, Privacy Policy, Terms).
+  - **Database Indexes**: Configured performance indexes for browse and filter queries on `CarListing` (`status`, `brand`, `price`, `createdAt`, `isFeatured`, `isNewArrival`, `bodyType`, `fuelType`, and composite `[status, brand, price]`), plus lead status and enquiry indexes.
+  - **Migration & Database Sync**: Successfully executed `npx prisma migrate dev --name init` creating migration `20260914112823_init` on PostgreSQL database.
+  - **Prisma Singleton & Public Projection (`lib/db.ts`)**: Configured Next.js singleton PrismaClient and defined `PUBLIC_CAR_SELECT` ensuring security constraints are strictly enforced at the database query level.
+  - **Seed Dataset (`prisma/seed.ts`)**: Populated live database with 20 realistic pre-owned vehicles, 4 seller leads across varied stages, 3 buyer enquiries, 3 testimonials, 5 FAQs, 2 banners, 3 static pages, and 1 default admin user (`admin@elitecarz.in`).
+  - **Query Verification Script (`scripts/verify-db.ts`)**: Automated test confirming exact row counts in PostgreSQL and verifying that `registrationNumber` is strictly excluded in public queries and accessible only in admin queries.
+- Public vs Admin-Only Fields Policy:
+  - `CarListing.registrationNumber`: **Admin-Only** (Sensitive vehicle registration number e.g. "DL 01 CZ 4492"). Excluded from `PUBLIC_CAR_SELECT`; never exposed in public listing or detail responses.
+  - `CarListing.createdById`: **Admin-Only** (Internal dealership staff reference).
+  - `SellerLead.mobileNumber`, `SellerLead.whatsappNumber`, `SellerLead.registrationNumber`, `SellerLead.internalNotes`: **Admin-Only** (Seller PII and internal evaluation notes). The entire `SellerLead` model is restricted to authenticated admin routes; no public read query exists.
+  - `BuyerEnquiry.phone`, `BuyerEnquiry.email`: **Admin-Only** (Buyer contact PII). Writable via public enquiry action, readable exclusively by authenticated admins.
+  - `AdminUser.passwordHash`: **Admin-Only** (Bcrypt password hash). Excluded from any user DTO or session payload.
+  - **Public Fields on CarListing**: `id`, `slug`, `title`, `brand`, `model`, `variant`, `bodyType`, `manufacturingYear`, `registrationYear`, `registrationState` (RTO state code, e.g. "DL", which is public on all Indian marketplace cards), `ownerType`, `kmDriven`, `fuelType`, `transmission`, `colour`, `insuranceStatus`, `insuranceValidTill`, `price`, `discountedPrice`, `discountPercent`, `currency`, `description`, `highlightTags`, `status`, `isFeatured`, `isNewArrival`, `coverImage`, `images`, `createdAt`, `updatedAt`.
+- What was NOT built / deferred:
+  - Online booking payment token processing (deferred to Phase 3/10 per PRD).
+  - Public UI routes rendering seeded cars (deferred to Phase 3 for Home Page and Phase 4 for Browse Page).
+- Known issues or shortcuts taken:
+  - None; migration applied with zero errors, Prisma client re-generated, and query tests confirmed full data integrity.
+- Files created or modified:
+  - `prisma/schema.prisma`
+  - `prisma/migrations/20260914112823_init/migration.sql`
+  - `prisma/seed.ts`
+  - `lib/db.ts`
+  - `scripts/verify-db.ts`
+  - `package.json`
+  - `.env`
+  - `.env.example`
+  - `PROGRESS.md`
+- Next recommended step:
+  - Proceed with Phase 3: Public Home Page (`app/(public)/page.tsx` as a Server Component querying top featured cars, Vengeance UI hero block with parallax, staggered trust/USP section, testimonials marquee, FAQ accordion, and footer).
+
+## Phase 3 — Home Page
+- Status: Done
+- What was built:
+  - **Server Component Architecture (`app/(public)/page.tsx`)**: Completely server-rendered page configured with ISR (`revalidate: 300`). Queries Prisma server-side with `PUBLIC_CAR_SELECT` for featured cars (`isFeatured: true`), new arrivals (`isNewArrival: true`), total inventory count, testimonials, and FAQs with zero client waterfalls.
+  - **Hero Section (`components/home/hero-section.tsx`)**: Luxury ambient crimson glow from Vengeance UI (`HeroGlow`), hardware-accelerated motion parallax (`useScroll`, `useTransform` on transform/opacity only), live car inventory count badge, dual CTAs ("Explore Stock" and "Sell Your Car"), and hero Porsche showcase using `next/image` with `priority={true}` and explicit `sizes` preventing layout shift (CLS: 0).
+  - **Trust/USP Section (`components/home/trust-section.tsx`)**: Scroll-reveal staggered entrance using `staggerContainer` and `fadeUp` motion variants detailing 150+ Checkpoint Inspection, Transparent Fixed Pricing, 12-Month Warranty, and Free RTO Transfer.
+  - **Featured Cars Grid (`components/home/featured-cars.tsx`)**: Renders top certified luxury listings using the reusable `CarCard` component.
+  - **New Arrivals Section (`components/home/new-arrivals.tsx`)**: Displays recently inducted certified vehicles.
+  - **Testimonials Marquee (`components/home/testimonials-section.tsx`)**: Continuous GPU-accelerated horizontal ticker with pause-on-hover rendering verified customer reviews directly from the database.
+  - **FAQ Accordion (`components/home/faqs-section.tsx`)**: Interactive collapsible questions using shadcn/ui `Accordion`.
+  - **Shared Public Navigation & Footer**:
+    - `components/public/navbar.tsx`: Sticky responsive header with backdrop blur, Elite Carz branding, navigation links, direct WhatsApp click-to-chat link, click-to-call link, and mobile drawer (`Sheet`).
+    - `components/public/footer.tsx`: Trust banner, showroom address in Delhi NCR, working hours, contact info, brand quick links, and policy compliance links.
+  - **Policy & Static Pages**:
+    - `app/(public)/about-us/page.tsx`: Dealership profile and value propositions.
+    - `app/(public)/privacy-policy/page.tsx`: IT Act 2000 data protection compliance disclosure.
+    - `app/(public)/terms-and-conditions/page.tsx`: Vehicle reservation and inspection terms.
+    - `app/(public)/refund-policy/page.tsx`: 100% refundable holding token policy.
+- What's still placeholder:
+  - Policy page texts use template legal text pending client's finalized lawyer-vetted documents.
+  - WhatsApp integration uses direct `wa.me` click-to-chat links (WhatsApp Business API integration scheduled for Phase 10).
+- Performance & Expected Lighthouse Score:
+  - Expected Lighthouse Performance Score: **94–98 / 100**.
+  - Rationale:
+    1. Server Component SSR with zero client-side data fetching waterfalls.
+    2. Zero Cumulative Layout Shift (CLS = 0) with `next/image` explicit sizing and priority.
+    3. Low initial JS footprint: 10.6 kB page JS (182 kB First Load JS including React runtime and Lucide icons).
+    4. Hardware-accelerated GPU animations strictly utilizing `transform` and `opacity`.
+- Files created or modified:
+  - `app/(public)/page.tsx`
+  - `app/(public)/layout.tsx`
+  - `components/home/hero-section.tsx`
+  - `components/home/trust-section.tsx`
+  - `components/home/featured-cars.tsx`
+  - `components/home/new-arrivals.tsx`
+  - `components/home/testimonials-section.tsx`
+  - `components/home/faqs-section.tsx`
+  - `components/public/navbar.tsx`
+  - `components/public/footer.tsx`
+  - `components/cars/car-card.tsx`
+  - `lib/utils/formatters.ts`
+  - `app/(public)/about-us/page.tsx`
+  - `app/(public)/privacy-policy/page.tsx`
+  - `app/(public)/terms-and-conditions/page.tsx`
+  - `app/(public)/refund-policy/page.tsx`
+  - `PROGRESS.md`
+- Next recommended step:
+  - Proceed with Phase 4: Browse/Listing Page (`app/(public)/cars/page.tsx`).
+
+## Phase 4 — Browse Page
+- Status: Done
+- What was built:
+  - **Server Component Listing Route (`app/(public)/cars/page.tsx`)**: Dynamic server-rendered inventory page accepting Next.js 15 `searchParams` for multi-facet database queries.
+  - **Multi-Facet Database Filtering**:
+    - Brand / Make (dropdown with real distinct brands from DB) -> `where.brand = { equals, mode: 'insensitive' }`
+    - Price Range Slider (interactive from ₹5L to ₹80L) -> `where.price = { gte: minPrice, lte: maxPrice }`
+    - Model Year (2018–2024 selector) -> `where.manufacturingYear = { gte: minYear }`
+    - Body Type (SUV, Sedan, Hatchback, MUV pills) -> `where.bodyType = bodyType`
+    - Fuel Type (Petrol, Diesel, Hybrid, Electric pills) -> `where.fuelType = fuelType`
+    - Transmission (Automatic, Manual pills) -> `where.transmission = transmission`
+    - Max KM Driven Slider (10k km to 100k km) -> `where.kmDriven = { lte: maxKm }`
+    - RTO State (DL, HR, UP, CH selector) -> `where.registrationState = { equals, mode: 'insensitive' }`
+    - Free-Text Search (matching title, brand, model, variant) -> insensitive `contains`
+    - "Show Sold" Toggle -> includes/excludes SOLD cars
+  - **Sorting Engine**: Fully wired to Prisma `orderBy`:
+    - Recently Added (`createdAt: desc`)
+    - Price: Low to High (`price: asc`)
+    - Price: High to Low (`price: desc`)
+    - Year: Newest First (`manufacturingYear: desc`)
+    - KM: Lowest First (`kmDriven: asc`)
+  - **Deterministic Numeric Pagination**:
+    - Configured with 9 cars per page (`PAGE_SIZE = 9`), total item counters, and accessible previous/next/page buttons.
+    - Justification: Deterministic numeric pagination provides shareable/bookmarkable URLs, clean SSR caching, crawlability for SEO, and eliminates infinite scroll viewport traps on mobile.
+  - **Zustand Client Store & URL Synchronization (`lib/store/use-filter-store.ts`)**:
+    - Manages filter state and synchronizes bidirectionally with URL search parameters via `useRouter` and React 19 `useTransition` for instant UI updates with zero full-page reload.
+  - **Motion Layout Reflow (`components/cars/car-grid.tsx`)**:
+    - Wrapped with `motion.div layout` and `AnimatePresence mode="popLayout"` so re-filtering reflows smoothly without jump-cutting.
+  - **Filter Components**:
+    - `components/cars/filters-sidebar.tsx`: Sticky desktop sidebar.
+    - `components/cars/filters-sheet.tsx`: Mobile slide-out drawer with active filter badge counter.
+    - `components/cars/search-bar.tsx`: Global search input with clear button.
+    - `components/cars/sort-dropdown.tsx`: Dropdown sorting control.
+    - `components/cars/cars-skeleton.tsx`: Skeleton loading cards displayed during filter transitions.
+    - `components/cars/pagination-bar.tsx`: Numeric pagination component.
+    - `components/cars/cars-browse-client.tsx`: Client coordinator with active filter badges and reset buttons.
+- Which filters are fully wired vs stubbed:
+  - **All 9 filters and sorting controls are 100% wired** directly to the PostgreSQL database through Prisma queries. Zero filters are stubbed.
+- Performance concerns noticed:
+  - Query execution runs in sub-millisecond time due to compound index `@@index([status, brand, price])` on `CarListing`.
+- Files created or modified:
+  - `app/(public)/cars/page.tsx`
+  - `lib/store/use-filter-store.ts`
+  - `components/cars/cars-browse-client.tsx`
+  - `components/cars/filters-sidebar.tsx`
+  - `components/cars/filters-sheet.tsx`
+  - `components/cars/search-bar.tsx`
+  - `components/cars/sort-dropdown.tsx`
+  - `components/cars/pagination-bar.tsx`
+  - `components/cars/car-grid.tsx`
+  - `components/cars/cars-skeleton.tsx`
+  - `PROGRESS.md`
+- Next recommended step:
+  - Proceed with Phase 5: Car Detail Page (`app/(public)/cars/[slug]/page.tsx` with image gallery lightbox, interactive animated EMI calculator, full specifications table, trust badges, similar cars query, and lead enquiry modal).
+
+## Phase 5 — Car Detail Page
+- Status: Done
+- What was built:
+  - **Pixel-Perfect UI Alignment & Skeleton Overhaul**:
+    - `components/cars/car-card.tsx`: Enforced strict `h-full flex flex-col justify-between`, fixed 2-line title container (`min-h-[3rem]`), fixed tag row (`min-h-[1.75rem]`), and `mt-auto` footer to guarantee exact uniform card height across all grid items regardless of title length.
+    - `components/cars/car-grid.tsx`: Added `className="h-full"` to motion cell containers to prevent height stretching discrepancies.
+    - `components/cars/cars-skeleton.tsx`: Completely rebuilt from the ground up to mirror `CarCard`'s geometry pixel-for-pixel (16:10 aspect ratio image, top badges, bottom EMI pill, title placeholders, specs row, tag row, and price/button footer) eliminating visual layout jumps during pagination or filter adjustments.
+  - **Dynamic Server Component Route (`app/(public)/cars/[slug]/page.tsx`)**:
+    - ISR configured with `revalidate: 300`.
+    - Dynamic metadata generation via `generateMetadata` injecting dynamic OpenGraph title, description, and car cover image.
+    - Database query using `PUBLIC_CAR_SELECT` ensuring registration plate and sensitive PII remain strictly hidden.
+  - **Interactive Image Gallery & Lightbox (`components/cars/car-gallery.tsx`)**:
+    - Swipeable/draggable main image stage powered by `motion/react` drag gestures.
+    - Thumbnail strip with active state indicator and keyboard/click navigation.
+    - Full-screen lightbox modal with image counter and zoom view.
+  - **Animated Interactive EMI Calculator (`components/cars/emi-calculator.tsx`)**:
+    - Sliders for Down Payment (₹0 up to 80% car value), Loan Tenure (1 to 7 years), and Interest Rate (7.0% to 15.0%).
+    - Real-time animated number roll-up using `motion/react` spring physics.
+    - Full financial breakdown showing total loan principal, estimated interest, and total payable amount.
+  - **Comprehensive Specifications Matrix**:
+    - 14-point structured technical table: Identity, Body Type, Transmission, Fuel Type, Registration Year, RTO State, Ownership, Mileage, Insurance Status, and Insurance Validity.
+  - **Buyer Enquiry & Test Drive Modal (`components/cars/enquiry-modal.tsx`)**:
+    - Dialog with buyer name, mobile number, email, preferred date, and message.
+    - Integrated with Server Action `submitBuyerEnquiry` persisting directly to PostgreSQL `buyer_enquiries`.
+  - **Related Certified Cars**:
+    - Queries up to 3 similar vehicles by brand and body type from PostgreSQL.
+- What was NOT built / deferred:
+  - Real-time online booking token checkout via Razorpay/Stripe (deferred to payment integration phase).
+- Known issues or shortcuts taken:
+  - None; tested with `npm run typecheck` passing with 0 errors.
+- Files created or modified:
+  - `app/(public)/cars/[slug]/page.tsx`
+  - `components/cars/car-gallery.tsx`
+  - `components/cars/emi-calculator.tsx`
+  - `components/cars/enquiry-modal.tsx`
+  - `components/cars/car-card.tsx`
+  - `components/cars/car-grid.tsx`
+  - `components/cars/cars-skeleton.tsx`
+  - `PROGRESS.md`
+- Next recommended step:
+  - Proceed with Phase 6: Sell Your Car Multi-Step Lead Form (`app/(public)/sell-your-car/page.tsx`).
+
+## Phase 6 — Sell Your Car Form
+- Status: Done
+- What was built:
+  - **Multi-Step Lead Wizard Architecture (`app/(public)/sell-your-car/page.tsx`)**:
+    - 4-step progressive disclosure lead generation wizard engineered for maximum conversion.
+    - SEO optimized with metadata, OpenGraph tags, and trust badges.
+  - **Zod Validation Schemas (`lib/validations/sell-car.ts`)**:
+    - Step 1 (`contactStepSchema`): Full name, Indian mobile number (`/^[6-9]\d{9}$/`), "WhatsApp is same as mobile" toggle, conditional WhatsApp number validation, city selection with quick-select pills.
+    - Step 2 (`registrationStepSchema`): Registration number formatting, auto-detection of RTO state from plate characters, manufacturing year, registration year consistency check, ownership tier (`FIRST`, `SECOND`, `THIRD`, `FOURTH_PLUS`).
+    - Step 3 (`vehicleStepSchema`): Brand selection with popular badges + custom input, model name, variant, odometer range chips, fuel type chips, transmission chips.
+    - Step 4 (`valuationStepSchema`): Expected price validation (₹50k - ₹10Cr), photos array, and honeypot spam protection field (`hp_website`).
+    - Full schema (`fullSellCarFormSchema`): Combined schema validating full payload before server persistence.
+  - **Client State Management (`lib/store/use-sell-car-store.ts`)**:
+    - Zustand store managing active step, direction (`1` | `-1`), draft form data, submission state, error messages, and completed lead reference.
+  - **Direction-Aware Animation Transitions (`components/sell-car/sell-car-wizard.tsx`)**:
+    - `motion/react` `AnimatePresence mode="wait"` directional slide variants (entering from right on Next, entering from left on Back) with zero layout shifts.
+  - **Visual Stepper (`components/sell-car/sell-car-stepper.tsx`)**:
+    - 4-step responsive stepper showing step numbers, active crimson highlights, green completed checkmarks, and animated progress bar track.
+  - **Wizard Step Components**:
+    - `components/sell-car/step-contact.tsx`: Contact information with quick city pills.
+    - `components/sell-car/step-registration.tsx`: License plate with live IND badge, state selector, year dropdowns, and ownership tier chips.
+    - `components/sell-car/step-vehicle.tsx`: Brand selection, model, variant, km range, fuel type, and transmission.
+    - `components/sell-car/step-valuation.tsx`: Real-time AI valuation appraisal range banner, expected price with real-time Indian Lakh/Crore formatted text, photo upload dropzone with thumbnail previews, anti-spam honeypot, and dealership selling guarantees.
+  - **Lead Confirmation / Success Screen (`components/sell-car/sell-car-success.tsx`)**:
+    - Generated reference code (`SEL-XXXXXX`) with one-click copy button.
+    - Vehicle specification and asking price summary card.
+    - 3-step "What Happens Next" visual roadmap (Doorstep Inspection -> Guaranteed Offer -> Instant IMPS Payment & RC Transfer).
+    - WhatsApp valuation desk link and inventory browse button.
+  - **Database Persistence via Server Actions (`app/actions/leads.ts`)**:
+    - `submitSellerLead`: Validates payload with Zod, validates honeypot (`hp_website`), formats registration state, and inserts new record into PostgreSQL `seller_leads` via Prisma. Returns generated reference ID.
+    - `submitBuyerEnquiry`: Validates and records test drive requests into PostgreSQL `buyer_enquiries`.
+  - **Seller Support & FAQs**:
+    - Accordion addressing valuation methodology, instant payment timelines, paperwork requirements, and free RC transfer.
+    - Direct phone and WhatsApp hotline banner.
+- What was NOT built / deferred:
+  - Image storage upload to S3/Cloudinary bucket (currently previews client-side object URLs and passes mock/uploaded URLs; cloud bucket storage scheduled for Phase 10 integration).
+- Known issues or shortcuts taken:
+  - None; tested with `npm run typecheck` and `npm run build` — both succeeded with 0 errors across all 11 routes.
+- Files created or modified:
+  - `app/(public)/sell-your-car/page.tsx`
+  - `lib/validations/sell-car.ts`
+  - `lib/store/use-sell-car-store.ts`
+  - `app/actions/leads.ts`
+  - `components/sell-car/sell-car-stepper.tsx`
+  - `components/sell-car/step-contact.tsx`
+  - `components/sell-car/step-registration.tsx`
+  - `components/sell-car/step-vehicle.tsx`
+  - `components/sell-car/step-valuation.tsx`
+  - `components/sell-car/sell-car-success.tsx`
+  - `components/sell-car/sell-car-wizard.tsx`
+  - `components/cars/enquiry-modal.tsx`
+  - `PROGRESS.md`
+- Next recommended step:
+  - Proceed with Phase 7: Admin Authentication & Dashboard Base (`app/(admin)/login/page.tsx`, session management, layout with navigation sidebar, dashboard KPIs, and recent leads/enquiries tables).
+
+## Milestone Update — Bhopal Car Deal Brand & Showroom Identity Integration
+- Status: Done
+- What was updated:
+  - **Brand Name & Heritage**: Updated website branding universally to **Bhopal Car Deal** (Pre-Owned Cars Showroom, Established Since 2004).
+  - **Logo Integration**:
+    - Extracted brand logo from user uploads and Downloads (`bhopal-car-deal-logo-dark.jpg`, `bhopal-car-deal-logo-light.jpg`, `logo.jpg` saved into `public/images/`).
+    - Integrated the official logo image with `next/image` into `components/public/navbar.tsx` (header and mobile sheet drawer) and `components/public/footer.tsx`.
+  - **Physical Showroom Address & Contact Details (from signboard)**:
+    - Address: `Shop No. 3 & 4, Near LBS Heart Hospital, In front of Motia Talab, Bhopal (M.P.)`.
+    - Primary Mobile: `+91 83588 04031` (Talib Khan).
+    - Alternate Mobile: `+91 99266 25232` (Talib Khan).
+    - Showroom leadership: `Talib Khan` & `Amir Khan`.
+    - WhatsApp click-to-chat links updated across all CTAs to target `+91 83588 04031`.
+  - **Showroom Storefront Photography**:
+    - Extracted the physical showroom photo from uploaded assets and stored as `public/images/showroom-storefront.jpg`.
+    - Featured the physical storefront showcase on the `About Us` page (`app/(public)/about-us/page.tsx`).
+  - **Signboard Core Services Alignment**:
+    - Integrated core services: Sale, Purchase, Exchange Facility, Vehicle Finance Assistance, R.T.O. & Insurance Transfer, 100% Verified Paper Work, and Checked By Experts into `TrustSection`, `HeroSection`, `Footer`, and `About Us`.
+  - **Database & Backend Verification**:
+    - Confirmed live PostgreSQL connectivity on Supabase.
+    - Verified row counts: 20 Cars, 4 Seller Leads, 3 Buyer Enquiries, 3 Testimonials, 5 FAQs, 1 Admin User.
+    - Public security projection (`PUBLIC_CAR_SELECT`) successfully verified — sensitive registration numbers remain strictly protected.
+    - Updated database `StaticPage` records in PostgreSQL for `about-us` and `privacy-policy` to reflect Bhopal Car Deal.
+- Files created or modified:
+  - `public/images/logo.jpg`
+  - `public/images/bhopal-car-deal-logo-dark.jpg`
+  - `public/images/bhopal-car-deal-logo-light.jpg`
+  - `public/images/showroom-storefront.jpg`
+  - `app/layout.tsx`
+  - `components/public/navbar.tsx`
+  - `components/public/footer.tsx`
+  - `components/home/hero-section.tsx`
+  - `components/home/trust-section.tsx`
+  - `components/home/featured-cars.tsx`
+  - `components/home/testimonials-section.tsx`
+  - `app/(public)/about-us/page.tsx`
+  - `app/(public)/privacy-policy/page.tsx`
+  - `app/(public)/refund-policy/page.tsx`
+  - `app/(public)/terms-and-conditions/page.tsx`
+  - `app/(public)/cars/page.tsx`
+  - `app/(public)/cars/[slug]/page.tsx`
+  - `app/(public)/sell-your-car/page.tsx`
+  - `components/cars/enquiry-modal.tsx`
+  - `components/sell-car/sell-car-success.tsx`
+  - `components/sell-car/step-valuation.tsx`
+  - `components/sell-car/step-contact.tsx`
+  - `prisma/seed.ts`
+  - `scripts/update-db-branding.ts`
+  - `PROGRESS.md`
+## Phase 6.5 — Homepage Hero Section Redesign (Full Background Car & Ultra-Level UI/UX)
+- Status: Done
+- What was built:
+  - **Full-Panoramic Luxury Car Background**:
+    - High-impact ruby-red luxury SUV asset in architectural showroom studio (`public/images/hero-red-car.jpg`).
+    - Positioned as the full-bleed panoramic background covering the entire hero canvas with smooth hardware-accelerated parallax (`motion/react` `useScroll` + `useTransform`).
+    - Integrated multi-stop architectural lighting gradients: left-to-right white gradient (`from-white/98 via-white/94 to-transparent`) ensuring 100% crystal-clear contrast and legibility for dark charcoal typography and search dock, with subtle ambient crimson glow behind the vehicle.
+  - **Typography & Layout Alignment**:
+    - Bold, high-impact headline matching reference: `Drive Your` / `Dream Car` / `Today` (crimson red gradient).
+    - Subtitle: `Quality Pre-Owned Cars • Best Prices • Trusted Deals`.
+    - Showroom trust pill: `Bhopal's Trusted Pre-Owned Showroom • Since 2004`.
+  - **Interactive Floating Quick Search Bar (`HeroSearchBar`)**:
+    - Multi-select capsule dock featuring `Make (Any)`, `Model (Any)`, and `Budget (Any)` dropdowns powered by Radix UI.
+    - Dynamic model population filtered by selected vehicle make.
+    - Red CTA button (`[ 🔍 Search ]`) routing directly to `/cars` with URL query parameters (`brand`, `search`, `minPrice`, `maxPrice`).
+  - **Bottom Feature Value Props Bar**:
+    - 4 circular crimson emblem badges matching reference:
+      1. `Hassle-Free Buying Experience` (Doorstep test drive & end-to-end paperwork)
+      2. `Verified Cars` (150+ point inspection & verified history)
+      3. `Best Prices & Great Deals` (Transparent pricing with zero hidden fees)
+      4. `Easy Finance Options` (Lowest EMI interest rates & instant sanction)
+  - **Navbar Alignment**:
+    - Updated navigation items in `components/public/navbar.tsx` to match reference layout: `Home`, `Inventory`, `Sell Your Car`, `Exchange`, `About Us`, `Contact` + direct phone link `+91 83588 04031`.
+- Files created or modified:
+  - `public/images/hero-red-car.jpg`
+  - `components/home/hero-search-bar.tsx`
+  - `components/home/hero-section.tsx`
+  - `components/public/navbar.tsx`
+  - `PROGRESS.md`
+- Verification:
+  - `npm run typecheck` passed with 0 errors.
+  - Development server running cleanly on `http://localhost:3000` (HTTP 200).
+  - All routes verified and operational.
+
+## Phase 7 — Admin Authentication & Executive Dashboard
+- Status: Done
+- What was built:
+  - **Auth.js / NextAuth v5 Authentication (`auth.config.ts`, `auth.ts`)**:
+    - Credentials-based login provider at `app/(admin)/admin/login/page.tsx`.
+    - Bcrypt password hashing and verification against PostgreSQL `admin_users` table (`bcryptjs.compare`).
+    - Separation of concerns: Edge-compatible `auth.config.ts` for Edge middleware and Node.js-specific `auth.ts` for database operations and hashing.
+    - Last login timestamp tracking upon successful authentication.
+    - Wrapped client login form with React `Suspense` boundary satisfying Next.js static prerendering requirements.
+  - **Middleware Route Protection (`middleware.ts`)**:
+    - Protects all `/admin/**` routes using NextAuth middleware.
+    - Unauthenticated requests are seamlessly redirected to `/admin/login?callbackUrl=...`.
+  - **Executive Admin Layout & Shell**:
+    - `components/admin/admin-sidebar.tsx`: Sticky responsive sidebar with Bhopal Car Deal logo branding, navigation items (Dashboard, Inventory, Leads, Enquiries), live public showroom link, admin user badge, and one-click sign out.
+    - `components/admin/admin-header.tsx`: Header with dynamic page title, live showroom link, admin status pill, and mobile sheet drawer for mobile and tablet administration.
+    - `components/admin/admin-shell.tsx` & `app/(admin)/layout.tsx`: Layout container handling full viewport shell.
+  - **Dashboard Overview (`app/(admin)/admin/dashboard/page.tsx`)**:
+    - Server Component querying real Prisma metrics directly from live Supabase PostgreSQL:
+      - Total live listings (`prisma.carListing.count({ where: { status: "LIVE" } })`)
+      - Cars sold this month (`prisma.carListing.count({ where: { status: "SOLD", updatedAt: { gte: startOfMonth } } })`)
+      - New seller leads (`prisma.sellerLead.count({ where: { status: "NEW" } })`)
+      - New buyer enquiries (`prisma.buyerEnquiry.count({ where: { status: "NEW" } })`)
+    - Recharts visual charts (`components/admin/dashboard-charts.tsx`):
+      - Car listings status distribution (Donut / Pie Chart across `LIVE`, `DRAFT`, `RESERVED`, `SOLD`, `ARCHIVED`).
+      - Buyer enquiries by source channel (Bar Chart across `CAR_DETAIL`, `HOME_PAGE`, `CONTACT_PAGE`, `DIRECT_CALL`).
+    - Recent activity tables:
+      - Top 5 recent vehicle listings with status pills, pricing, and direct edit links.
+      - Top 5 recent customer seller leads with asking price and contact city.
+- Note on 2FA (Two-Factor Authentication):
+  - **2FA is explicitly DEFERRED** to a subsequent security enhancement phase. The current implementation uses secure bcrypt-hashed password authentication with encrypted NextAuth JWT sessions.
+- Files created or modified:
+  - `auth.config.ts`
+  - `auth.ts`
+  - `middleware.ts`
+  - `app/api/auth/[...nextauth]/route.ts`
+  - `app/(admin)/layout.tsx`
+  - `app/(admin)/admin/login/page.tsx`
+  - `app/(admin)/admin/dashboard/page.tsx`
+  - `components/admin/admin-sidebar.tsx`
+  - `components/admin/admin-header.tsx`
+  - `components/admin/admin-shell.tsx`
+  - `components/admin/dashboard-charts.tsx`
+
+## Phase 8 — Admin Inventory Management (CRUD)
+- Status: Done
+- What was built:
+  - **TanStack Table Inventory List View (`components/admin/inventory-table.tsx` & `app/(admin)/admin/inventory/page.tsx`)**:
+    - Multi-facet filtering by status (`ALL`, `LIVE`, `DRAFT`, `RESERVED`, `SOLD`, `ARCHIVED`) with live count badges.
+    - Brand filter dropdown with distinct makes dynamically extracted from inventory.
+    - Instant global search input matching title, brand, model, variant, and vehicle registration plate.
+    - TanStack Table v8 datagrid with sortable columns: vehicle thumbnail + title + variant + admin-only registration plate pill (`MP 04...`), brand & body badge, specs & km, pricing with discount % badges, and status pills.
+    - Row action dropdown menu: Edit vehicle, View public page, Duplicate as draft, quick status toggles (`LIVE`, `DRAFT`, `RESERVED`, `SOLD`), and Delete with confirmation modal.
+    - Multi-row selection & floating bulk actions bar: Bulk Publish, Bulk Move to Draft, Bulk Archive, and Bulk Delete.
+    - Numeric pagination with configurable page size (10, 25, 50).
+  - **Full-Spec Car Management Form (`components/admin/car-form.tsx`)**:
+    - Engineered with `react-hook-form` and `@hookform/resolvers/zod` (`lib/validations/car.ts`).
+    - Section 1: Basic details (Title, Brand, Model, Variant, Body Type, Status selector, Featured switch, New Arrival switch).
+    - Section 2: Technical specifications & RTO verification (Manufacturing Year, Registration Year, RTO State, Admin-only sensitive registration plate with lock indicator, Owner Tier, KM driven, Fuel Type, Transmission, Colour, Insurance Status & Validity Date).
+    - Section 3: Pricing & automatic discount computation (Base price in INR, discounted offer price, live calculated savings amount and `% off` pill).
+    - Section 4: Value highlights & descriptions (Interactive chips manager with one-click presets like `150+ Checkpoints Certified`, `Single Owner`, `Zero Dep Insurance`, `Non-Accidental Guaranteed`, etc.).
+    - Section 5: Photo gallery & cover image manager (Image URL inputs, thumbnail gallery grid, one-click "Set as Cover" designation, remove photo action, cover photo indicator).
+  - **Add Car Route (`app/(admin)/admin/inventory/new/page.tsx`)**:
+    - Pre-configured defaults for fast entry.
+    - Submits to `POST /api/admin/cars` with unique slug generation and instant redirect.
+  - **Edit Car Route (`app/(admin)/admin/inventory/[id]/edit/page.tsx`)**:
+    - Server-side prefetching with Prisma, prefilling form with all technical specs and attached photos.
+    - Updates via `PUT /api/admin/cars/[id]`.
+  - **Admin Inventory API Endpoints**:
+    - `POST /api/admin/cars`: Validates schema, creates `CarListing` and `CarImage` records in transaction, generates unique slug, revalidates public ISR paths (`/`, `/cars`).
+    - `GET /api/admin/cars`: Paginated and filterable endpoint for admin data fetching.
+    - `PATCH /api/admin/cars`: Bulk status updates.
+    - `DELETE /api/admin/cars`: Bulk cascade deletion.
+    - `GET /api/admin/cars/[id]`: Single vehicle retrieval including admin-only registration number.
+    - `PUT /api/admin/cars/[id]`: Updates vehicle specs and synchronizes image associations with cache revalidation.
+    - `DELETE /api/admin/cars/[id]`: Deletes vehicle listing.
+    - `POST /api/admin/cars/[id]/duplicate`: Clones existing vehicle into `DRAFT` status with `-copy` slug suffix.
+- Verification & Test Results:
+  - `npm run typecheck` passed with 0 errors.
+  - `npm run build` passed with exit code 0 across all 15 routes.
+  - Automated CRUD cycle test (`scripts/verify-inventory-crud.ts`) executed against live Supabase PostgreSQL:
+    - Admin authentication with bcrypt validated (`Admin@123`).
+    - Create car with full specs and photos verified.
+    - Public security projection verified (registration plate strictly excluded from public queries).
+    - Update car verified.
+    - Duplicate car to DRAFT verified.
+    - Deletion and cleanup verified.
+- Files created or modified:
+  - `lib/validations/car.ts`
+  - `components/ui/dropdown-menu.tsx`
+  - `components/admin/car-form.tsx`
+  - `components/admin/inventory-table.tsx`
+  - `app/(admin)/admin/inventory/page.tsx`
+  - `app/(admin)/admin/inventory/new/page.tsx`
+  - `app/(admin)/admin/inventory/[id]/edit/page.tsx`
+  - `app/api/admin/cars/route.ts`
+  - `app/api/admin/cars/[id]/route.ts`
+  - `app/api/admin/cars/[id]/duplicate/route.ts`
+  - `scripts/verify-inventory-crud.ts`
+  - `PROGRESS.md`
+
+## Phase 8.1 — Light Theme Reversion & Admin Panel Theme Unification
+- Status: Done
+- What was built & polished:
+  - **Public Storefront Reversion to Light Luxury Theme**:
+    - Reverted public header (`components/public/navbar.tsx`) to clean white/light frosted glass (`bg-white/95 backdrop-blur-md border-b border-slate-200/80 text-slate-900`) with high-contrast slate-700 navigation links and clean pill buttons.
+    - Reverted floating hero search dock (`components/home/hero-search-bar.tsx`) from dark capsule to crisp white glassmorphic capsule dock (`bg-white/95 backdrop-blur-xl border border-slate-200/90 text-slate-900`), light popovers, and crimson CTA.
+    - Reverted homepage hero section (`components/home/hero-section.tsx`) to light luxury showroom aesthetic (`bg-slate-50`), bold dark headline ("Drive Your Dream Car Today"), and clean white bottom feature emblems bar.
+    - Reverted Trust & USP section (`components/home/trust-section.tsx`) and Testimonials marquee (`components/home/testimonials-section.tsx`) to clean white cards and light backgrounds.
+  - **Admin Panel Light Theme Conversion**:
+    - Converted layout shell (`components/admin/admin-shell.tsx`) to `bg-[#f8fafc] text-slate-900`.
+    - Converted sidebar (`components/admin/admin-sidebar.tsx`) to crisp white sidebar (`bg-white border-r border-slate-200 text-slate-900`), light navigation states, and clean profile card.
+    - Converted header (`components/admin/admin-header.tsx`) to white sticky bar (`bg-white border-b border-slate-200 text-slate-900`) and light mobile sheet drawer.
+    - Converted admin login page (`app/(admin)/admin/login/page.tsx`) to light background (`bg-[#f8fafc]`) and white login card (`bg-white border border-slate-200 shadow-xl text-slate-900`).
+    - Converted dashboard (`app/(admin)/admin/dashboard/page.tsx`) and analytics charts (`components/admin/dashboard-charts.tsx`) to clean white cards, dark slate typography, and white glass tooltip popovers.
+    - Converted TanStack Table inventory datagrid (`components/admin/inventory-table.tsx`) to white datagrid (`bg-white border-slate-200`, `thead bg-slate-50`, `hover:bg-slate-50/80`, light status filter chips, light search bar, light delete dialog).
+    - Converted vehicle create/edit form (`components/admin/car-form.tsx`) across all 5 sections to clean white cards (`bg-white border border-slate-200 shadow-xs`), light inputs, selects, textareas, tags, gallery cards, and sticky bottom bar.
+    - Converted breadcrumbs in `app/(admin)/admin/inventory/new/page.tsx` and `app/(admin)/admin/inventory/[id]/edit/page.tsx` to slate-500/slate-900.
+    - Converted dropdown menus (`components/ui/dropdown-menu.tsx`) to light styling (`bg-white border border-slate-200 text-slate-800 shadow-xl`).
+  - **Zero Functional Logic Changed**:
+    - NextAuth credentials authentication, middleware route guard, Prisma queries, TanStack table filtering/sorting/pagination, multi-image manager, and Zod validation completely intact.
+- Verification & Test Results:
+  - `npm run typecheck` passed with 0 errors (`tsc --noEmit`).
+  - `npm run build` passed with exit code 0 across all 15 routes and API endpoints.
+
+## Phase 9 — Leads & Enquiries
+- Status: Done
+- What was built:
+  - **Seller Leads Management (`/admin/leads`)**:
+    - Client datagrid (`components/admin/leads-table.tsx`) in clean light theme with real-time search, multi-status filter tabs (`ALL`, `NEW`, `CONTACTED`, `INSPECTION_SCHEDULED`, `EVALUATED_OFFER_MADE`, `PURCHASED`, `REJECTED`), direct WhatsApp link (`wa.me`) with pre-filled message, direct phone call trigger, status dropdown with immediate persistence, and conversion indicators.
+    - Server page (`app/(admin)/admin/leads/page.tsx`) with summary counters and datagrid.
+    - Single lead dossier (`app/(admin)/admin/leads/[id]/page.tsx` & `components/admin/lead-detail-client.tsx`):
+      - Seller profile card (name, mobile, city, WhatsApp CTA, phone call).
+      - Vehicle technical evaluation card (brand, model, variant, year, owner type, km range, fuel, transmission, asking price, admin-only registration plate).
+      - Seller-uploaded photos preview gallery.
+      - Interactive workflow stepper (`NEW` → `CONTACTED` → `INSPECTION_SCHEDULED` → `EVALUATED_OFFER_MADE` → `PURCHASED` → `REJECTED`) with instant persistence.
+      - Internal inspection notes textarea with "Save Notes" button persisting to database.
+      - **Lead-to-Listing Conversion (`/api/admin/leads/[id]/convert`)**:
+        - **CONFIRMED**: The conversion action genuinely creates a real `CarListing` record in the database in `DRAFT` status pre-filled with all vehicle specs (title, slug, brand, model, variant, bodyType, manufacturingYear, registrationYear, registrationState, registrationNumber, ownerType, parsed kmDriven, fuelType, transmission, expectedPrice, coverImage, photos as `CarImage` records, and inspection notes in description), marks `SellerLead.convertedCarId`, updates `SellerLead.status` to `PURCHASED`, and redirects immediately to `/admin/inventory/[newCarId]/edit`. It is **NOT** just a blank redirect.
+  - **Buyer Enquiries Management (`/admin/enquiries`)**:
+    - Client datagrid (`components/admin/enquiries-table.tsx`) in clean light theme with real-time search, multi-status filter tabs (`ALL`, `NEW`, `CONTACTED`, `TEST_DRIVE_SCHEDULED`, `NEGOTIATION`, `WON_SOLD`, `LOST`), linked vehicle preview with thumbnail, title, and price, direct WhatsApp link (`wa.me`) with pre-filled car context, direct phone trigger, and status dropdown.
+    - Server page (`app/(admin)/admin/enquiries/page.tsx`) with status counters and datagrid.
+    - Single enquiry dossier (`app/(admin)/admin/enquiries/[id]/page.tsx` & `components/admin/enquiry-detail-client.tsx`):
+      - Buyer contact profile, email, phone, source badge, customer message.
+      - Linked vehicle card with photo, price, specs, and links to public car view and admin inventory edit view.
+      - Interactive deal workflow stepper (`NEW` → `CONTACTED` → `TEST_DRIVE_SCHEDULED` → `NEGOTIATION` → `WON_SOLD` → `LOST`) with instant persistence.
+      - Quick actions: WhatsApp chat referencing the specific car, direct call.
+  - **CSV Export**:
+    - Built RFC 4180-compliant CSV generator (`lib/utils/csv.ts`) handling commas, double quotes, and linebreaks.
+    - Dedicated export API routes:
+      - `GET /api/admin/leads/export`: Streams formatted CSV of seller leads.
+      - `GET /api/admin/enquiries/export`: Streams formatted CSV of buyer enquiries.
+    - One-click client export triggers on both tables downloading real data with status-aware filenames.
+- Verification & Test Results:
+  - Automated test script `scripts/verify-leads-enquiries.ts` executed against live Supabase PostgreSQL:
+    - SellerLeads query verified.
+    - BuyerEnquiries query verified.
+    - Lead status update persistence verified (`INSPECTION_SCHEDULED`).
+    - Lead-to-listing conversion verified: real `CarListing` created in `DRAFT` status with pre-filled title, price, plate, and linked `convertedCarId`.
+    - Clean test record teardown verified.
+    - RFC 4180 CSV escaping verified.
+  - `npm run typecheck` passed with 0 errors.
+  - `npm run lint` passed with 0 warnings and 0 errors (`✔ No ESLint warnings or errors`).
+  - `npm run build` passed with exit code 0 across all 20 routes.
+
+## Phase 10 — Notifications & Integrations
+- Status: Done
+- What was built:
+  - **Direct WhatsApp Click-to-Chat Integrations**:
+    - Vehicle Detail Page (`app/(public)/cars/[slug]/page.tsx`): Added WhatsApp inquiry CTA button pre-filled with vehicle title and price, plus a mobile sticky bottom bar with WhatsApp and Test Drive actions for easy thumb reach. Corrected phone link to `+91 83588 04031`.
+    - Global Floating WhatsApp Button (`components/public/whatsapp-float.tsx`): Persistent pulse-animated FAB mounted on all public pages (`app/(public)/layout.tsx`) linking to `https://wa.me/918358804031` with pre-filled greeting message.
+    - Dedicated Contact Page (`app/(public)/contact/page.tsx` & `components/contact/contact-form.tsx`): Displays Bhopal showroom address (*Shop No. 3 & 4, Near LBS Heart Hospital, In front of Motia Talab, Bhopal*), Talib Khan's phone numbers (+91 83588 04031 / 99266 25232), direct WhatsApp CTA button, working hours, and an interactive contact form that submits to `BuyerEnquiry` with `source: CONTACT_PAGE`.
+    - Admin Leads & Enquiries: One-click WhatsApp buttons with pre-filled customer greetings and vehicle references.
+- Live Credentials vs Stubbed for Dev:
+  - **Live with Real Credentials**:
+    - WhatsApp Click-to-Chat: Fully operational via `https://wa.me/918358804031` with pre-filled context messages across car detail, contact page, floating mobile button, and admin dossiers. Works immediately without requiring API keys or incurring per-message fees.
+    - Direct Phone Calls: Fully operational via `tel:+918358804031` and `tel:+919926625232`.
+    - Lead & Enquiry Persistence: Fully operational via Supabase PostgreSQL and server actions.
+  - **Stubbed / Deferred for Development (No credentials provided per user request)**:
+    - Meta WhatsApp Business Cloud API: Deferred. Direct `wa.me` links fulfill all customer inquiry routing directly to the owner's WhatsApp without unnecessary server overhead or API maintenance.
+    - SMS Gateway (e.g. Gupshup / Twilio / Fast2SMS): Deferred.
+    - Transactional Email (e.g. Resend / SendGrid / AWS SES): Deferred.
+- Requirements to Make Enterprise Integrations Fully Live (If ever desired in future):
+  - **Meta WhatsApp Business Cloud API**:
+    - Meta Facebook Business Manager verification.
+    - WhatsApp Business Account (WABA) ID.
+    - Registered Phone Number ID.
+    - Permanent System User Access Token with `whatsapp_business_messaging` permissions.
+    - Pre-approved message templates registered in Meta Business Suite.
+  - **Indian SMS Gateway (DLT Compliance)**:
+    - Government DLT Registration (Entity ID on Jio/Airtel/Vil DLT portal).
+    - Approved 6-character Sender ID Header (e.g., `BHPCRD`).
+    - DLT-approved transactional SMS template IDs.
+    - Gateway API Key (e.g. Fast2SMS, Gupshup, or Twilio).
+  - **Transactional Email (Resend / AWS SES / SendGrid)**:
+    - Domain DNS records for `bhopalcardeal.com` (SPF `v=spf1 include:...`, DKIM CNAME records, DMARC TXT record).
+    - Provider API Key.
+
+## Phase 11 — WhatsApp Single-Encoding, Exact KM Slider & Cloudinary Uploader
+- Status: Done
+- What was built:
+  - **WhatsApp Message Double-Encoding Safeguard**:
+    - Identified that `sell-car-success.tsx` previously pre-encoded the message with `encodeURIComponent` and `buildWhatsAppUrl` called `encodeURIComponent` a second time, resulting in `%20`, `%2C`, `%3A` showing up in WhatsApp.
+    - Added automatic URI decoding safeguard in `lib/config/contact.ts` (`buildWhatsAppUrl`) to prevent double encoding regardless of input source.
+    - Updated `components/sell-car/sell-car-success.tsx` to pass a clean template literal without double encoding.
+  - **Exact Kilometers Driven Input & Slider (Step 3 Sell Your Car)**:
+    - Replaced the broad preset range buttons (`20,000 - 40,000 km`) in `components/sell-car/step-vehicle.tsx` with a dual control:
+      - Direct numeric input with "KM" unit badge and localized format (`35,000 km`).
+      - Smooth interactive Radix slider (`Slider`) spanning from 1,000 km to 1,50,000+ km.
+      - Quick milestone preset chips (`10,000 km`, `25,000 km`, `45,000 km`, etc.).
+    - Updated `components/sell-car/step-valuation.tsx` to parse exact numeric KM for accurate depreciation and valuation range calculation.
+  - **Cloudinary Image Uploader for Vehicle Admin**:
+    - Installed official `cloudinary` package.
+    - Created `lib/cloudinary.ts` server utility with auto-optimization (`auto:best`, auto-format WebP) and organizational folder `bhopal-car-deal/inventory`.
+    - Created `app/api/admin/upload/route.ts` API supporting multi-file uploads with auth protection and file type/size validation (up to 10MB per image).
+    - Replaced the manual Unsplash URL-only input in `components/admin/car-form.tsx` with an interactive drag-and-drop Cloudinary uploader supporting multiple photos at once, live upload spinners, cover photo assignment, deletion, and manual URL fallback.
+    - Updated `.env.example` and `.env` with `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET`.
+- Verification & Test Results:
+  - `npm run lint` passed with 0 warnings and 0 errors (`✔ No ESLint warnings or errors`).
+  - `npm run typecheck` passed with 0 errors.
+  - `npm run build` passed with exit code 0 across all 35 routes and API endpoints.
+
+## Phase 12 — Cloudinary Seller Photo Pipeline, Database Sanitization & Detailed WhatsApp Dossier
+- Status: Done
+- What was built:
+  - **Root Cause Resolution for Missing Cloudinary Images & `blob:` URLs in Database**:
+    - Identified that `components/sell-car/step-valuation.tsx` previously used a client-side mock `URL.createObjectURL(file)`. This generated browser-memory `blob:` strings that were submitted directly to the PostgreSQL database, leaving Cloudinary with 0 uploads and the database with broken `blob:` URLs.
+    - Built public endpoint `app/api/leads/upload/route.ts` dedicated to public seller photos with 10MB limits, format validation, and direct Cloudinary upload into `${CLOUDINARY_FOLDER || "bhopal_car_deal"}/leads`.
+    - Rewired `components/sell-car/step-valuation.tsx` with fast client-side canvas compression (`compressImageClient`) and genuine upload to `/api/leads/upload`, storing real Cloudinary HTTPS URLs in form state and database.
+    - Updated `app/api/admin/leads/[id]/convert/route.ts` to defensively filter out any `blob:` strings when converting leads to inventory listings.
+  - **Database Sanitization**:
+    - Scanned and cleaned all tables in Supabase PostgreSQL:
+    - Updated `CarListing.coverImage` for car `cmufd8b730001jm04jncfrhw0` from broken `blob:` to fallback image.
+    - Updated `CarImage.url` for `cmufdaw6x0003jm040ieaqzwx` from `blob:` to fallback image.
+    - Stripped invalid `blob:` URLs from 5 legacy `SellerLead` records.
+    - Post-verification confirmed: 0 blob URLs across all models.
+  - **Detailed WhatsApp Seller Dossier**:
+    - Formatted 100% of seller details in `components/sell-car/sell-car-success.tsx`: Lead Ref, Full Name, Calling Mobile, WhatsApp Number, Inspection City, Make, Model, Variant, Manufacturing & Registration Years, Registration State, Plate Number, Ownership Tier, Fuel Type, Transmission, Exact KM, Asking Price in INR and Lakhs, and Photo count.
+    - Added single-encoding protection in `lib/config/contact.ts`.
+- Verification & Test Results:
+  - Automated check confirmed 0 blob URLs across leads, cars, and car images.
+  - `npm run typecheck` passed with 0 errors.
+  - `npm run lint` passed with 0 warnings, 0 errors.
+  - `npm run build` passed with exit code 0 across all 35 routes.
