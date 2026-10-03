@@ -4,7 +4,6 @@ import type { Testimonial, FAQ } from "@prisma/client";
 import { HeroSection } from "@/components/home/hero-section";
 import { TrustSection } from "@/components/home/trust-section";
 import { FeaturedCars } from "@/components/home/featured-cars";
-import { NewArrivals } from "@/components/home/new-arrivals";
 import { TestimonialsSection } from "@/components/home/testimonials-section";
 import { FAQsSection } from "@/components/home/faqs-section";
 
@@ -12,35 +11,28 @@ import { FAQsSection } from "@/components/home/faqs-section";
 export const revalidate = 300;
 
 export default async function HomePage() {
-  let featuredCars: PublicCarListing[] = [];
-  let newArrivals: PublicCarListing[] = [];
+  let liveCars: PublicCarListing[] = [];
+  let soldCars: PublicCarListing[] = [];
   let totalCarsCount = 0;
   let testimonials: Testimonial[] = [];
   let faqs: FAQ[] = [];
 
   try {
-    [featuredCars, newArrivals, totalCarsCount, testimonials, faqs] =
+    const [allLive, allSold, testimonialsData, faqsData] =
       await Promise.all([
         prisma.carListing.findMany({
           where: {
             status: "LIVE",
-            isFeatured: true,
           },
           select: PUBLIC_CAR_SELECT,
-          take: 6,
-          orderBy: { createdAt: "desc" },
+          orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
         }),
         prisma.carListing.findMany({
           where: {
-            status: "LIVE",
-            isNewArrival: true,
+            status: "SOLD",
           },
           select: PUBLIC_CAR_SELECT,
-          take: 6,
-          orderBy: { createdAt: "desc" },
-        }),
-        prisma.carListing.count({
-          where: { status: "LIVE" },
+          orderBy: { updatedAt: "desc" },
         }),
         prisma.testimonial.findMany({
           where: { featured: true },
@@ -52,6 +44,12 @@ export default async function HomePage() {
           orderBy: { order: "asc" },
         }),
       ]);
+
+    liveCars = allLive;
+    soldCars = allSold;
+    totalCarsCount = allLive.length + allSold.length;
+    testimonials = testimonialsData;
+    faqs = faqsData;
   } catch (error) {
     console.warn("[HomePage] Database query warning (using fallbacks):", error);
   }
@@ -64,11 +62,8 @@ export default async function HomePage() {
       {/* Trust & USP Staggered Entrance Section */}
       <TrustSection />
 
-      {/* Featured Cars Section */}
-      <FeaturedCars cars={featuredCars} />
-
-      {/* New Arrivals Section */}
-      <NewArrivals cars={newArrivals} />
+      {/* Showroom Cars Section with Available Stock & Sold Out at Bottom */}
+      <FeaturedCars cars={liveCars} soldCars={soldCars} />
 
       {/* Testimonials Marquee Section */}
       <TestimonialsSection testimonials={testimonials} />

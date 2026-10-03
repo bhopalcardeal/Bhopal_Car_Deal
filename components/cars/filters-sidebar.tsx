@@ -47,10 +47,10 @@ const TRANSMISSIONS = [
 
 const RTO_STATES = [
   { label: "All States", value: "" },
+  { label: "Madhya Pradesh (MP)", value: "MP" },
+  { label: "Maharashtra (MH)", value: "MH" },
   { label: "Delhi (DL)", value: "DL" },
-  { label: "Haryana (HR)", value: "HR" },
   { label: "Uttar Pradesh (UP)", value: "UP" },
-  { label: "Chandigarh (CH)", value: "CH" },
 ];
 
 export function FiltersSidebar({
@@ -69,7 +69,7 @@ export function FiltersSidebar({
     filters.maxKm < 100000 ||
     filters.registrationState !== "" ||
     filters.bodyType !== "" ||
-    filters.showSold;
+    !filters.showSold;
 
   return (
     <div className="flex flex-col space-y-6 rounded-2xl border border-border bg-card p-6 shadow-xs">

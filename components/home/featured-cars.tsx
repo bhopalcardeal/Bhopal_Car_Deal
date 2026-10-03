@@ -7,10 +7,14 @@ import { ArrowRight, Sparkles } from "lucide-react";
 
 interface FeaturedCarsProps {
   cars: PublicCarListing[];
+  soldCars?: PublicCarListing[];
 }
 
-export function FeaturedCars({ cars }: FeaturedCarsProps) {
-  if (!cars || cars.length === 0) return null;
+export function FeaturedCars({ cars, soldCars }: FeaturedCarsProps) {
+  const liveCars = cars.filter((c) => c.status !== "SOLD");
+  const soldList = soldCars && soldCars.length > 0 ? soldCars : cars.filter((c) => c.status === "SOLD");
+
+  if (liveCars.length === 0 && soldList.length === 0) return null;
 
   return (
     <section className="py-20 sm:py-28 bg-background border-b border-border">
@@ -20,7 +24,7 @@ export function FeaturedCars({ cars }: FeaturedCarsProps) {
           <div className="space-y-2">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               <Sparkles className="size-3" />
-              <span>Handpicked Luxury</span>
+              <span>Handpicked Luxury • Bhopal &amp; Indore</span>
             </div>
             <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-foreground">
               Featured Pre-Owned Vehicles
@@ -31,19 +35,54 @@ export function FeaturedCars({ cars }: FeaturedCarsProps) {
           </div>
 
           <Button asChild variant="outline" className="gap-2 self-start sm:self-auto font-semibold">
-            <Link href="/cars?featured=true">
-              <span>View All Featured</span>
+            <Link href="/cars">
+              <span>View All Inventory</span>
               <ArrowRight className="size-4" />
             </Link>
           </Button>
         </div>
 
-        {/* 3-Column Car Grid */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {cars.map((car, idx) => (
-            <CarCard key={car.id} car={car} priorityImage={idx < 3} />
-          ))}
-        </div>
+        {/* 3-Column Car Grid (Available Vehicles) */}
+        {liveCars.length > 0 && (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {liveCars.map((car, idx) => (
+              <CarCard key={car.id} car={car} priorityImage={idx < 3} />
+            ))}
+          </div>
+        )}
+
+        {/* Sold Out & Delivered Vehicles Showcase (at the bottom of home inventory) */}
+        {soldList.length > 0 && (
+          <div className="mt-16 sm:mt-24 pt-12 sm:pt-16 border-t border-border">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-semibold text-red-600 dark:text-red-400">
+                  <span className="size-2 rounded-full bg-red-500" />
+                  <span>Delivered to Happy Owners</span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+                  Recently Delivered / Sold Out
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  These verified pre-owned vehicles were recently delivered to clients in Bhopal &amp; Indore. Kept for specification &amp; pricing benchmark.
+                </p>
+              </div>
+
+              <Button asChild variant="outline" className="gap-2 self-start sm:self-auto font-semibold">
+                <Link href="/sell-your-car">
+                  <span>Sell Your Car With Us</span>
+                  <ArrowRight className="size-4" />
+                </Link>
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {soldList.map((car) => (
+                <CarCard key={car.id} car={car} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

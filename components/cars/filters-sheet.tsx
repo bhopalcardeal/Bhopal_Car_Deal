@@ -34,7 +34,7 @@ export function FiltersSheet(props: FiltersSheetProps) {
     props.filters.maxKm < 100000,
     props.filters.registrationState !== "",
     props.filters.bodyType !== "",
-    props.filters.showSold,
+    !props.filters.showSold,
   ].filter(Boolean).length;
 
   return (

@@ -24,7 +24,9 @@ import {
   Share2,
   ChevronRight,
   Sparkles,
+  Lock,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { buildWhatsAppUrl, getWhatsAppNumber } from "@/lib/config/contact";
 
 export const revalidate = 300;
@@ -206,20 +208,33 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
                     </>
                   )}
                 </div>
+
+                {/* Sold Out Notice for Archived / Delivered vehicles */}
+                {isSold && (
+                  <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3.5 space-y-1.5 mt-3">
+                    <div className="flex items-center gap-2 text-red-600 dark:text-red-400 font-bold text-xs uppercase tracking-wider">
+                      <span className="size-2 rounded-full bg-red-500 animate-pulse" />
+                      <span>Vehicle Delivered • Sold Out</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      This vehicle was inspected, certified, and delivered. Direct booking is closed, but you can inspect all details and specifications below.
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Pricing Block */}
               <div className="border-t border-b border-border py-4 space-y-2">
                 <div className="flex items-baseline gap-3">
-                  <span className="text-3xl sm:text-4xl font-black text-foreground">
+                  <span className={cn("text-3xl sm:text-4xl font-black", isSold ? "text-muted-foreground" : "text-foreground")}>
                     {formatPriceINR(finalPrice)}
                   </span>
-                  {car.discountedPrice && (
+                  {car.discountedPrice && !isSold && (
                     <span className="text-base text-muted-foreground line-through">
                       {formatPriceINR(car.price)}
                     </span>
                   )}
-                  {car.discountPercent && (
+                  {car.discountPercent && !isSold && (
                     <Badge variant="success" className="bg-emerald-600 text-white font-bold text-xs">
                       {car.discountPercent}% OFF
                     </Badge>
@@ -227,40 +242,88 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
                 </div>
 
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                    Fixed Price • Zero Hidden Charges
+                  <span className={cn("font-semibold", isSold ? "text-red-500 font-bold" : "text-emerald-600 dark:text-emerald-400")}>
+                    {isSold ? "Delivered at Fixed Price" : "Fixed Price • Zero Hidden Charges"}
                   </span>
-                  <span className="text-muted-foreground">
-                    EMI from <strong className="text-foreground">{formatEmiPerMonth(startingEmi)}</strong>
-                  </span>
+                  {!isSold && (
+                    <span className="text-muted-foreground">
+                      EMI from <strong className="text-foreground">{formatEmiPerMonth(startingEmi)}</strong>
+                    </span>
+                  )}
                 </div>
               </div>
 
               {/* Action Buttons */}
               <div className="space-y-3">
-                <EnquiryModal
-                  carId={car.id}
-                  carTitle={car.title}
-                  carPrice={finalPrice}
-                  triggerVariant="default"
-                  triggerText="Book a Test Drive"
-                />
+                {isSold ? (
+                  <>
+                    <Button
+                      disabled
+                      className="w-full h-11 bg-muted text-muted-foreground font-bold cursor-not-allowed border border-border flex items-center justify-center gap-2"
+                    >
+                      <Lock className="size-4" />
+                      <span>Sold Out — Booking Closed</span>
+                    </Button>
 
-                <div className="grid grid-cols-2 gap-2.5">
-                  <Button asChild variant="outline" className="gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 border-emerald-500/30">
-                    <a href={whatsappInquiryUrl} target="_blank" rel="noopener noreferrer">
-                      <MessageSquare className="size-4" />
-                      <span>WhatsApp</span>
-                    </a>
-                  </Button>
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="w-full h-11 gap-2 text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400 border-emerald-500/40 hover:bg-emerald-50 dark:hover:bg-emerald-950/20"
+                    >
+                      <a
+                        href={buildWhatsAppUrl(
+                          `Hi Bhopal Car Deal, I saw your delivered vehicle (${car.title}). Do you have a similar car available or coming soon?`
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <MessageSquare className="size-4" />
+                        <span>Enquire for Similar Car on WhatsApp</span>
+                      </a>
+                    </Button>
 
-                  <Button asChild variant="outline" className="gap-2 text-xs font-semibold">
-                    <a href={`tel:+${getWhatsAppNumber()}`}>
-                      <Phone className="size-4 text-primary" />
-                      <span>Call Now</span>
-                    </a>
-                  </Button>
-                </div>
+                    <div className="grid grid-cols-2 gap-2.5 pt-1">
+                      <Button asChild variant="outline" className="gap-2 text-xs font-semibold">
+                        <a href={`tel:+${getWhatsAppNumber()}`}>
+                          <Phone className="size-4 text-primary" />
+                          <span>Call Showroom</span>
+                        </a>
+                      </Button>
+
+                      <Button asChild variant="outline" className="gap-2 text-xs font-semibold">
+                        <Link href="/cars">
+                          <span>Browse Other Cars</span>
+                        </Link>
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <EnquiryModal
+                      carId={car.id}
+                      carTitle={car.title}
+                      carPrice={finalPrice}
+                      triggerVariant="default"
+                      triggerText="Book a Test Drive"
+                    />
+
+                    <div className="grid grid-cols-2 gap-2.5">
+                      <Button asChild variant="outline" className="gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 border-emerald-500/30">
+                        <a href={whatsappInquiryUrl} target="_blank" rel="noopener noreferrer">
+                          <MessageSquare className="size-4" />
+                          <span>WhatsApp</span>
+                        </a>
+                      </Button>
+
+                      <Button asChild variant="outline" className="gap-2 text-xs font-semibold">
+                        <a href={`tel:+${getWhatsAppNumber()}`}>
+                          <Phone className="size-4 text-primary" />
+                          <span>Call Now</span>
+                        </a>
+                      </Button>
+                    </div>
+                  </>
+                )}
 
                 <div className="pt-2 text-center">
                   <a
@@ -426,6 +489,52 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
           </div>
         </div>
 
+        {/* Delivered / Sold Out Status Notice at the Bottom of Specs */}
+        {isSold && (
+          <div className="rounded-2xl border-2 border-dashed border-red-500/30 bg-red-500/5 p-6 sm:p-8 text-center space-y-4">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-500/10 text-red-600 dark:text-red-400">
+              <CheckCircle2 className="size-6" />
+            </div>
+            <div className="space-y-1.5 max-w-xl mx-auto">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-red-500/10 px-3 py-1 text-xs font-bold text-red-600 dark:text-red-400">
+                <span className="size-2 rounded-full bg-red-500" />
+                <span>Status: Sold Out &amp; Delivered</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-foreground">
+                This {car.title} Has Been Sold
+              </h3>
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                This vehicle was inspected, certified, and delivered through Bhopal Car Deal. While this specific car is no longer available for purchase, our showroom sources certified pre-owned vehicles on demand with verified paperwork and clear title.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+              <Button
+                asChild
+                className="w-full sm:w-auto bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold gap-2 px-6 h-11 rounded-xl shadow-sm"
+              >
+                <a
+                  href={buildWhatsAppUrl(
+                    `Hi Bhopal Car Deal, I am interested in a vehicle similar to ${car.title}. Please notify me when one is available.`
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MessageSquare className="size-4" />
+                  <span>Enquire for Similar Car on WhatsApp</span>
+                </a>
+              </Button>
+
+              <Button asChild variant="outline" className="w-full sm:w-auto h-11 rounded-xl font-semibold">
+                <Link href="/cars">
+                  <span>Browse Available Inventory</span>
+                  <ChevronRight className="size-4 ml-1" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* Section 3: Similar / Related Cars Carousel / Grid */}
         {relatedCars.length > 0 && (
           <div className="border-t border-border pt-12 space-y-8">
@@ -454,13 +563,19 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
       </div>
 
       {/* Mobile Sticky Action Bar */}
-      <aside aria-label="Mobile Actions" className="fixed bottom-0 left-0 right-0 z-30 sm:hidden bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 shadow-xl flex items-center justify-between gap-3">
+      <aside aria-label="Mobile Actions" className="fixed bottom-0 left-0 right-0 z-30 sm:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-border p-3 shadow-xl flex items-center justify-between gap-3">
         <div>
-          <span className="text-base font-black text-slate-900 font-mono block">
+          {isSold ? (
+            <span className="text-[10px] font-bold text-red-600 dark:text-red-400 uppercase tracking-wide block">
+              ● Sold Out
+            </span>
+          ) : (
+            <span className="text-[10px] text-emerald-600 font-semibold block">
+              Certified • Free RC
+            </span>
+          )}
+          <span className="text-base font-black text-foreground font-mono block">
             {formatPriceINR(finalPrice)}
-          </span>
-          <span className="text-[10px] text-emerald-600 font-semibold">
-            Certified • Free RC
           </span>
         </div>
 
@@ -470,19 +585,41 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
             size="sm"
             className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs gap-1.5 px-3 h-9 rounded-xl shadow-xs"
           >
-            <a href={whatsappInquiryUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              href={
+                isSold
+                  ? buildWhatsAppUrl(
+                      `Hi Bhopal Car Deal, I saw your delivered car (${car.title}). Can you help me find a similar car?`
+                    )
+                  : whatsappInquiryUrl
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <MessageSquare className="size-4" />
-              <span>WhatsApp</span>
+              <span>{isSold ? "Enquire Similar" : "WhatsApp"}</span>
             </a>
           </Button>
 
-          <EnquiryModal
-            carId={car.id}
-            carTitle={car.title}
-            carPrice={finalPrice}
-            triggerVariant="default"
-            triggerText="Test Drive"
-          />
+          {isSold ? (
+            <Button
+              disabled
+              size="sm"
+              variant="secondary"
+              className="text-xs font-bold h-9 rounded-xl text-muted-foreground cursor-not-allowed opacity-75 border border-border"
+            >
+              <Lock className="size-3 mr-1" />
+              <span>Sold</span>
+            </Button>
+          ) : (
+            <EnquiryModal
+              carId={car.id}
+              carTitle={car.title}
+              carPrice={finalPrice}
+              triggerVariant="default"
+              triggerText="Test Drive"
+            />
+          )}
         </div>
       </aside>
     </main>
