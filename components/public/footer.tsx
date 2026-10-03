@@ -138,11 +138,11 @@ export function Footer() {
                   Premium Sedans
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/style-guide" className="hover:text-primary transition-colors">
                   Design System (Dev)
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 

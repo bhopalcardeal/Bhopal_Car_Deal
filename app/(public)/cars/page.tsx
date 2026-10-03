@@ -39,7 +39,7 @@ export default async function CarsPage({ searchParams }: CarsPageProps) {
       : undefined;
   const search = typeof resolvedParams.search === "string" ? resolvedParams.search.trim() : undefined;
   const sort = typeof resolvedParams.sort === "string" ? resolvedParams.sort : "recently_added";
-  const showSold = resolvedParams.showSold === "true";
+  const showSold = resolvedParams.showSold !== "false";
   const page = typeof resolvedParams.page === "string" ? Math.max(1, parseInt(resolvedParams.page, 10)) : 1;
 
   const minPrice =
@@ -106,19 +106,24 @@ export default async function CarsPage({ searchParams }: CarsPageProps) {
     ];
   }
 
-  // Construct Prisma ORDER BY clause
-  let orderBy: Prisma.CarListingOrderByWithRelationInput = { createdAt: "desc" };
+  // Construct Prisma ORDER BY clause: Live cars first, Sold cars at bottom, then user-selected sort
+  let sortOrderBy: Prisma.CarListingOrderByWithRelationInput = { createdAt: "desc" };
   if (sort === "price_asc") {
-    orderBy = { price: "asc" };
+    sortOrderBy = { price: "asc" };
   } else if (sort === "price_desc") {
-    orderBy = { price: "desc" };
+    sortOrderBy = { price: "desc" };
   } else if (sort === "year_desc") {
-    orderBy = { manufacturingYear: "desc" };
+    sortOrderBy = { manufacturingYear: "desc" };
   } else if (sort === "km_asc") {
-    orderBy = { kmDriven: "asc" };
+    sortOrderBy = { kmDriven: "asc" };
   } else {
-    orderBy = { createdAt: "desc" };
+    sortOrderBy = { createdAt: "desc" };
   }
+
+  const orderBy: Prisma.CarListingOrderByWithRelationInput[] = [
+    { status: "asc" }, // "LIVE" precedes "SOLD" alphabetically
+    sortOrderBy,
+  ];
 
   // Execute database queries in parallel
   const [cars, totalCount, brandRecords] = await Promise.all([

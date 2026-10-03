@@ -61,7 +61,7 @@ export function CarsBrowseClient({
     if (nextState.bodyType) params.set("bodyType", nextState.bodyType);
     if (nextState.search) params.set("search", nextState.search);
     if (nextState.sort && nextState.sort !== "recently_added") params.set("sort", nextState.sort);
-    if (nextState.showSold) params.set("showSold", "true");
+    if (nextState.showSold === false) params.set("showSold", "false");
     if (nextState.page > 1) params.set("page", String(nextState.page));
 
     const queryString = params.toString();

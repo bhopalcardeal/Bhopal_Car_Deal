@@ -36,7 +36,7 @@ const DEFAULT_FILTERS = {
   bodyType: "",
   search: "",
   sort: "recently_added",
-  showSold: false,
+  showSold: true,
   page: 1,
   isPending: false,
 };
@@ -75,7 +75,7 @@ export const useFilterStore = create<FilterState>((set) => ({
       bodyType: params.bodyType ?? "",
       search: params.search ?? "",
       sort: params.sort ?? "recently_added",
-      showSold: params.showSold === "true",
+      showSold: params.showSold !== "false",
       page: params.page ? Number(params.page) : 1,
       isPending: false,
     });

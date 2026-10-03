@@ -46,7 +46,10 @@ export function CarCard({ car, priorityImage = false, className }: CarCardProps)
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           priority={priorityImage}
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          className={cn(
+            "object-cover transition-transform duration-500 ease-out group-hover:scale-105",
+            isSold && "grayscale-[25%] opacity-90"
+          )}
         />
 
         {/* Gradient Overlay for contrast */}
@@ -55,8 +58,8 @@ export function CarCard({ car, priorityImage = false, className }: CarCardProps)
         {/* Top Badges */}
         <div className="absolute left-3 top-3 flex flex-wrap gap-1.5 z-10">
           {isSold ? (
-            <Badge variant="destructive" className="font-bold tracking-wider uppercase text-[10px] px-2 py-0.5 shadow-sm">
-              Sold Out
+            <Badge variant="destructive" className="bg-red-600 hover:bg-red-600 text-white font-black tracking-wider uppercase text-[10px] px-2.5 py-0.5 shadow-sm">
+              ● Sold Out
             </Badge>
           ) : car.isNewArrival ? (
             <Badge variant="featured" className="bg-primary text-primary-foreground font-bold text-[10px] px-2 py-0.5 shadow-sm">
@@ -83,12 +86,19 @@ export function CarCard({ car, priorityImage = false, className }: CarCardProps)
           </span>
         </div>
 
-        {/* Starting EMI Pill */}
+        {/* Status / Starting EMI Pill */}
         <div className="absolute bottom-3 left-3 z-10">
-          <div className="inline-flex items-center gap-1 rounded-md bg-black/75 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-xs">
-            <span className="text-white/70">Starting EMI:</span>
-            <span className="font-bold text-primary-foreground">{formatEmiPerMonth(startingEmi)}</span>
-          </div>
+          {isSold ? (
+            <div className="inline-flex items-center gap-1.5 rounded-md bg-black/85 px-2.5 py-1 text-[11px] font-semibold text-red-300 backdrop-blur-xs border border-red-500/40">
+              <span className="size-1.5 rounded-full bg-red-500 animate-pulse" />
+              <span>Vehicle Delivered</span>
+            </div>
+          ) : (
+            <div className="inline-flex items-center gap-1 rounded-md bg-black/75 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-xs">
+              <span className="text-white/70">Starting EMI:</span>
+              <span className="font-bold text-primary-foreground">{formatEmiPerMonth(startingEmi)}</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -157,7 +167,7 @@ export function CarCard({ car, priorityImage = false, className }: CarCardProps)
         <div className="border-t border-border pt-4 mt-auto flex items-center justify-between gap-3">
           <div className="flex flex-col">
             <div className="flex items-baseline gap-2">
-              <span className="text-xl font-black text-foreground">
+              <span className={cn("text-xl font-black", isSold ? "text-muted-foreground" : "text-foreground")}>
                 {formatPriceINR(car.discountedPrice ?? car.price)}
               </span>
               {car.discountedPrice && (
@@ -166,14 +176,27 @@ export function CarCard({ car, priorityImage = false, className }: CarCardProps)
                 </span>
               )}
             </div>
-            <span className="text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
-              Fixed Price • RC Included
+            <span
+              className={cn(
+                "text-[10px] font-medium",
+                isSold ? "text-red-500 font-semibold" : "text-emerald-600 dark:text-emerald-400"
+              )}
+            >
+              {isSold ? "Delivered • Archival View" : "Fixed Price • RC Included"}
             </span>
           </div>
 
-          <Button asChild size="sm" className="gap-1 px-3.5 font-semibold shrink-0">
+          <Button
+            asChild
+            size="sm"
+            variant={isSold ? "outline" : "default"}
+            className={cn(
+              "gap-1 px-3.5 font-semibold shrink-0",
+              isSold && "border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
+            )}
+          >
             <Link href={`/cars/${car.slug}`}>
-              <span>View</span>
+              <span>{isSold ? "View (Sold)" : "View"}</span>
               <ChevronRight className="size-3.5" />
             </Link>
           </Button>
