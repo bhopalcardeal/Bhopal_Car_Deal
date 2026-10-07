@@ -1,12 +1,14 @@
-import React from "react";
+import React, { cache, Suspense } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { prisma, PUBLIC_CAR_SELECT } from "@/lib/db";
+import { prisma, PUBLIC_CAR_SELECT, PUBLIC_CAR_CARD_SELECT } from "@/lib/db";
+import type { CarBodyType } from "@prisma/client";
 import { CarGallery } from "@/components/cars/car-gallery";
 import { EmiCalculator } from "@/components/cars/emi-calculator";
 import { EnquiryModal } from "@/components/cars/enquiry-modal";
 import { CarCard } from "@/components/cars/car-card";
+import { CarsSkeleton } from "@/components/cars/cars-skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,20 +37,37 @@ interface CarDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Generate dynamic SEO metadata per car
+// React.cache deduplicates database queries within the same request lifecycle
+// (e.g. generateMetadata and CarDetailPage share the exact same query promise)
+const getCarBySlug = cache(async (slug: string) => {
+  return prisma.carListing.findUnique({
+    where: { slug },
+    select: PUBLIC_CAR_SELECT,
+  });
+});
+
+// Pre-render existing active & sold cars into static cache for instantaneous (<50ms) navigation
+export async function generateStaticParams() {
+  try {
+    const cars = await prisma.carListing.findMany({
+      where: { status: { in: ["LIVE", "SOLD"] } },
+      select: { slug: true },
+      take: 50,
+      orderBy: { createdAt: "desc" },
+    });
+    return cars.map((car) => ({ slug: car.slug }));
+  } catch (error) {
+    console.warn("[generateStaticParams] Could not pre-fetch slugs:", error);
+    return [];
+  }
+}
+
+// Generate dynamic SEO metadata per car using cached request
 export async function generateMetadata({
   params,
 }: CarDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const car = await prisma.carListing.findUnique({
-    where: { slug },
-    select: {
-      title: true,
-      description: true,
-      coverImage: true,
-      price: true,
-    },
-  });
+  const car = await getCarBySlug(slug);
 
   if (!car) {
     return {
@@ -58,10 +77,10 @@ export async function generateMetadata({
 
   return {
     title: `${car.title} | Pre-Owned Cars | Bhopal Car Deal`,
-    description: car.description.slice(0, 160),
+    description: car.description ? car.description.slice(0, 160) : "",
     openGraph: {
       title: `${car.title} — ${formatPriceINR(car.price)}`,
-      description: car.description.slice(0, 160),
+      description: car.description ? car.description.slice(0, 160) : "",
       images: [{ url: car.coverImage, width: 1200, height: 630 }],
     },
   };
@@ -70,27 +89,12 @@ export async function generateMetadata({
 export default async function CarDetailPage({ params }: CarDetailPageProps) {
   const { slug } = await params;
 
-  // Query vehicle by unique slug using PUBLIC_CAR_SELECT (protecting PII registration numbers)
-  const car = await prisma.carListing.findUnique({
-    where: { slug },
-    select: PUBLIC_CAR_SELECT,
-  });
+  // Query vehicle by unique slug using deduplicated cached query
+  const car = await getCarBySlug(slug);
 
   if (!car) {
     notFound();
   }
-
-  // Query 3 related cars (same brand or body type)
-  const relatedCars = await prisma.carListing.findMany({
-    where: {
-      status: "LIVE",
-      id: { not: car.id },
-      OR: [{ brand: car.brand }, { bodyType: car.bodyType }],
-    },
-    select: PUBLIC_CAR_SELECT,
-    take: 3,
-    orderBy: { createdAt: "desc" },
-  });
 
   const isSold = car.status === "SOLD";
   const finalPrice = car.discountedPrice ?? car.price;
@@ -535,31 +539,14 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
           </div>
         )}
 
-        {/* Section 3: Similar / Related Cars Carousel / Grid */}
-        {relatedCars.length > 0 && (
-          <div className="border-t border-border pt-12 space-y-8">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight text-foreground">
-                  Similar Vehicles You May Like
-                </h2>
-                <p className="text-xs sm:text-sm text-muted-foreground">
-                  Explore other certified {car.brand} {car.bodyType ? `and ${car.bodyType.toLowerCase()}` : ""} stock.
-                </p>
-              </div>
-
-              <Button asChild variant="outline" size="sm" className="hidden sm:inline-flex">
-                <Link href={`/cars?bodyType=${car.bodyType}`}>View All Similar</Link>
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {relatedCars.map((rc) => (
-                <CarCard key={rc.id} car={rc} />
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Section 3: Similar / Related Cars Asynchronous Streaming Section */}
+        <Suspense fallback={<SimilarCarsSkeleton />}>
+          <SimilarCarsSection
+            currentCarId={car.id}
+            brand={car.brand}
+            bodyType={car.bodyType}
+          />
+        </Suspense>
       </div>
 
       {/* Mobile Sticky Action Bar */}
@@ -623,5 +610,71 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
         </div>
       </aside>
     </main>
+  );
+}
+
+// Asynchronously streamed secondary similar cars section
+async function SimilarCarsSection({
+  currentCarId,
+  brand,
+  bodyType,
+}: {
+  currentCarId: string;
+  brand: string;
+  bodyType: CarBodyType;
+}) {
+  try {
+    const relatedCars = await prisma.carListing.findMany({
+      where: {
+        status: "LIVE",
+        id: { not: currentCarId },
+        OR: [{ brand }, { bodyType }],
+      },
+      select: PUBLIC_CAR_CARD_SELECT,
+      take: 3,
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (relatedCars.length === 0) return null;
+
+    return (
+      <div className="border-t border-border pt-12 space-y-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">
+              Similar Vehicles You May Like
+            </h2>
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              Explore other certified {brand} {bodyType ? `and ${bodyType.toLowerCase()}` : ""} stock.
+            </p>
+          </div>
+
+          <Button asChild variant="outline" size="sm" className="hidden sm:inline-flex">
+            <Link href={`/cars?bodyType=${bodyType}`}>View All Similar</Link>
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {relatedCars.map((rc) => (
+            <CarCard key={rc.id} car={rc} />
+          ))}
+        </div>
+      </div>
+    );
+  } catch (error) {
+    console.warn("[SimilarCarsSection] Failed to load similar cars:", error);
+    return null;
+  }
+}
+
+function SimilarCarsSkeleton() {
+  return (
+    <div className="border-t border-border pt-12 space-y-8">
+      <div className="space-y-2">
+        <div className="h-7 w-64 bg-muted animate-pulse rounded-md" />
+        <div className="h-4 w-96 bg-muted/60 animate-pulse rounded-md" />
+      </div>
+      <CarsSkeleton count={3} />
+    </div>
   );
 }

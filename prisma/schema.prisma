@@ -139,6 +139,9 @@ model CarListing {
   @@index([isNewArrival])
   @@index([bodyType])
   @@index([fuelType])
+  @@index([status, isFeatured, createdAt(sort: Desc)])
+  @@index([status, createdAt(sort: Desc)])
+  @@index([status, bodyType])
   @@index([status, brand, price])
   @@map("car_listings")
 }

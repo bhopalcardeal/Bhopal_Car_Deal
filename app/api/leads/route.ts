@@ -101,6 +101,8 @@ export async function POST(req: NextRequest) {
       const targetFolder = `${baseFolder}/leads`;
       const ALLOWED_EXTS = [".jpg", ".jpeg", ".png", ".webp", ".avif", ".heic", ".jfif", ".bmp"];
 
+      // 1. Validate all files first before starting uploads
+      const validFiles: File[] = [];
       for (const file of files) {
         if (!file || typeof file !== "object" || file.size === 0) continue;
 
@@ -122,16 +124,25 @@ export async function POST(req: NextRequest) {
           );
         }
 
+        validFiles.push(file);
+      }
+
+      // 2. Parallelize image uploads with Promise.all for high performance
+      if (validFiles.length > 0) {
         try {
-          const arrayBuffer = await file.arrayBuffer();
-          const buffer = Buffer.from(arrayBuffer);
-          const uploadResult = await uploadToCloudinary(buffer, targetFolder, file.name);
-          uploadedCloudinaryUrls.push(uploadResult.secureUrl);
-          console.log(`☁️ [Cloudinary Uploaded]: ${uploadResult.publicId} -> ${uploadResult.secureUrl}`);
+          const uploadPromises = validFiles.map(async (file) => {
+            const arrayBuffer = await file.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            const uploadResult = await uploadToCloudinary(buffer, targetFolder, file.name);
+            return uploadResult.secureUrl;
+          });
+
+          const results = await Promise.all(uploadPromises);
+          uploadedCloudinaryUrls.push(...results);
         } catch (uploadErr) {
-          console.error(`❌ [Cloudinary Upload Failed for ${file.name}]:`, uploadErr);
+          console.error("❌ [Cloudinary Parallel Upload Failed]:", uploadErr);
           return NextResponse.json(
-            { error: `Failed to upload image "${file.name}" to Cloudinary. Please check your connection.` },
+            { error: "Failed to upload car images to storage. Please check your connection and retry." },
             { status: 500 }
           );
         }

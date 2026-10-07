@@ -2,19 +2,53 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CarCard } from "@/components/cars/car-card";
-import type { PublicCarListing } from "@/lib/db";
+import type { PublicCarListing, PublicCarCardListing } from "@/lib/db";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 interface FeaturedCarsProps {
-  cars: PublicCarListing[];
-  soldCars?: PublicCarListing[];
+  cars: (PublicCarCardListing | PublicCarListing)[];
+  soldCars?: (PublicCarCardListing | PublicCarListing)[];
 }
 
 export function FeaturedCars({ cars, soldCars }: FeaturedCarsProps) {
   const liveCars = cars.filter((c) => c.status !== "SOLD");
   const soldList = soldCars && soldCars.length > 0 ? soldCars : cars.filter((c) => c.status === "SOLD");
 
-  if (liveCars.length === 0 && soldList.length === 0) return null;
+  if (liveCars.length === 0 && soldList.length === 0) {
+    return (
+      <section className="py-20 sm:py-28 bg-background border-b border-border">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl border border-dashed border-border bg-card/50 p-8 sm:p-12 text-center max-w-3xl mx-auto space-y-6">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-semibold text-primary">
+              <Sparkles className="size-3.5" />
+              <span>Curated Showroom • Bhopal &amp; Indore</span>
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+                Featured Pre-Owned Vehicles
+              </h2>
+              <p className="text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed">
+                Our certified inventory is currently being refreshed with fresh arrivals. Check back shortly or contact our showroom directly for off-market luxury and family cars.
+              </p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-4 pt-2">
+              <Button asChild className="gap-2 font-semibold">
+                <Link href="/sell-your-car">
+                  <span>Sell Your Car</span>
+                  <ArrowRight className="size-4" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="gap-2 font-semibold">
+                <Link href="/contact">
+                  <span>Contact Showroom</span>
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 sm:py-28 bg-background border-b border-border">

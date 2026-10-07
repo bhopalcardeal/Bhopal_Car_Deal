@@ -117,7 +117,7 @@ export function HeroSection({ totalCarsCount }: HeroSectionProps) {
               <span>Trusted Deals</span>
             </p>
             <p className="text-xs sm:text-sm text-slate-600 max-w-xl font-medium leading-relaxed">
-              Explore {totalCarsCount}+ certified pre-owned luxury and family cars with 100%
+              Explore {totalCarsCount > 0 ? `${totalCarsCount}+ ` : ""}certified pre-owned luxury and family cars with 100%
               verified paperwork, transparent deals, and instant spot exchange.
             </p>
           </div>

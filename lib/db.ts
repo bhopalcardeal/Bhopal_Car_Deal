@@ -99,6 +99,37 @@ export const PUBLIC_CAR_SELECT = {
   },
 } as const;
 
+export const PUBLIC_CAR_CARD_SELECT = {
+  id: true,
+  slug: true,
+  title: true,
+  brand: true,
+  model: true,
+  variant: true,
+  bodyType: true,
+  manufacturingYear: true,
+  registrationYear: true,
+  registrationState: true,
+  ownerType: true,
+  kmDriven: true,
+  fuelType: true,
+  transmission: true,
+  colour: true,
+  price: true,
+  discountedPrice: true,
+  discountPercent: true,
+  currency: true,
+  highlightTags: true,
+  status: true,
+  isFeatured: true,
+  isNewArrival: true,
+  coverImage: true,
+} as const;
+
+export type PublicCarCardListing = Prisma.CarListingGetPayload<{
+  select: typeof PUBLIC_CAR_CARD_SELECT;
+}>;
+
 export type PublicCarListing = Prisma.CarListingGetPayload<{
   select: typeof PUBLIC_CAR_SELECT;
 }>;

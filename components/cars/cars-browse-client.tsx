@@ -10,12 +10,12 @@ import { FiltersSheet } from "@/components/cars/filters-sheet";
 import { CarGrid } from "@/components/cars/car-grid";
 import { PaginationBar } from "@/components/cars/pagination-bar";
 import { CarsSkeleton } from "@/components/cars/cars-skeleton";
-import type { PublicCarListing } from "@/lib/db";
+import type { PublicCarListing, PublicCarCardListing } from "@/lib/db";
 import { Badge } from "@/components/ui/badge";
 import { X, Sparkles } from "lucide-react";
 
 interface CarsBrowseClientProps {
-  initialCars: PublicCarListing[];
+  initialCars: (PublicCarCardListing | PublicCarListing)[];
   totalCount: number;
   availableBrands: string[];
   currentPage: number;

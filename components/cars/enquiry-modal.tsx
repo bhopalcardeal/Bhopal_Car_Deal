@@ -57,10 +57,14 @@ export function EnquiryModal({
     setIsSubmitting(true);
     setSubmitError(null);
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
+
     try {
       const res = await fetch("/api/enquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
         body: JSON.stringify({
           name: formData.name,
           phone: formData.phone,
@@ -72,6 +76,7 @@ export function EnquiryModal({
         }),
       });
 
+      clearTimeout(timeoutId);
       const data = await res.json();
 
       if (!res.ok || !data.success) {
@@ -96,8 +101,13 @@ export function EnquiryModal({
           window.location.href = data.whatsappUrl;
         }
       }
-    } catch {
-      setSubmitError("Failed to connect to server. Please call us.");
+    } catch (err) {
+      clearTimeout(timeoutId);
+      if (err instanceof Error && err.name === "AbortError") {
+        setSubmitError("Request timed out. Please check your connection or contact our showroom directly.");
+      } else {
+        setSubmitError("Failed to connect to server. Please call us.");
+      }
     } finally {
       setIsSubmitting(false);
     }
