@@ -38,7 +38,7 @@ export function CarCard({ car, priorityImage = false, className }: CarCardProps)
       )}
     >
       {/* Media / Image Container (Fixed 16/10 Aspect Ratio) */}
-      <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-muted">
+      <Link href={`/cars/${car.slug}`} prefetch={true} className="block relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-muted focus:outline-none">
         <Image
           src={getOptimizedImageUrl(car.coverImage, { width: 720 })}
           alt={car.title}
@@ -99,7 +99,7 @@ export function CarCard({ car, priorityImage = false, className }: CarCardProps)
             </div>
           )}
         </div>
-      </div>
+      </Link>
 
       {/* Details Container with Fixed Vertical Rhythm */}
       <div className="flex flex-1 flex-col justify-between p-5 space-y-4">

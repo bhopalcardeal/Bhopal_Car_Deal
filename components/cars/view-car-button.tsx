@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useTransition } from "react";
+import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Loader2 } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ViewCarButtonProps {
@@ -15,15 +15,16 @@ interface ViewCarButtonProps {
 
 export function ViewCarButton({ slug, isSold, className }: ViewCarButtonProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const href = `/cars/${slug}`;
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    // Only intercept normal left clicks; allow Ctrl/Cmd/middle click for new tab
-    if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
-      e.preventDefault();
-      startTransition(() => {
-        router.push(`/cars/${slug}`);
-      });
+  // Aggressive proactive prefetch on hover, touch, or focus so that before the user
+  // finishes releasing their click/tap, the full RSC route payload is 100% warmed
+  // in Next.js's client router cache.
+  const handlePrefetch = () => {
+    try {
+      router.prefetch(href);
+    } catch {
+      // Ignore prefetch errors
     }
   };
 
@@ -33,24 +34,19 @@ export function ViewCarButton({ slug, isSold, className }: ViewCarButtonProps) {
       size="sm"
       variant={isSold ? "outline" : "default"}
       className={cn(
-        "gap-1 px-3.5 font-semibold shrink-0 cursor-pointer transition-all",
-        isSold && "border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20",
-        isPending && "opacity-85 pointer-events-none scale-95 ring-2 ring-primary/30",
+        "gap-1 px-3.5 font-semibold shrink-0 cursor-pointer active:scale-95 transition-transform duration-100",
+        isSold &&
+          "border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20",
         className
       )}
+      onMouseEnter={handlePrefetch}
+      onTouchStart={handlePrefetch}
+      onFocus={handlePrefetch}
+      onPointerEnter={handlePrefetch}
     >
-      <Link href={`/cars/${slug}`} prefetch={true} onClick={handleClick}>
-        {isPending ? (
-          <>
-            <Loader2 className="size-3.5 animate-spin text-current" />
-            <span>Opening...</span>
-          </>
-        ) : (
-          <>
-            <span>{isSold ? "View (Sold)" : "View"}</span>
-            <ChevronRight className="size-3.5" />
-          </>
-        )}
+      <Link href={href} prefetch={true}>
+        <span>{isSold ? "View (Sold)" : "View"}</span>
+        <ChevronRight className="size-3.5" />
       </Link>
     </Button>
   );
