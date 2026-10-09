@@ -35,7 +35,7 @@ export function Footer() {
                 <Award className="size-5" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold">12-Month Warranty Included</h4>
+                <h4 className="text-sm font-semibold">6-Month Warranty Included</h4>
                 <p className="text-xs text-muted-foreground">Powertrain peace of mind</p>
               </div>
             </div>

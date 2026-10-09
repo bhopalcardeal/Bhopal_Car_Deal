@@ -151,7 +151,7 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
               <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-3.5 shadow-2xs">
                 <Award className="size-5 text-primary shrink-0" />
                 <div className="text-xs">
-                  <p className="font-bold">12-Month Warranty</p>
+                  <p className="font-bold">6-Month Warranty</p>
                   <p className="text-muted-foreground text-[11px]">Powertrain Covered</p>
                 </div>
               </div>
