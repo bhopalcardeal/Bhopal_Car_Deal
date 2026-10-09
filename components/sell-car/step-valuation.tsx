@@ -114,6 +114,7 @@ export function StepValuation() {
   const [honeypot, setHoneypot] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
   const [photoError, setPhotoError] = useState<string | null>(null);
+  const [submitPhase, setSubmitPhase] = useState<string>("");
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
   // Revoke object URLs on unmount to prevent memory leaks
@@ -170,6 +171,11 @@ export function StepValuation() {
     }
 
     setIsSubmitting(true);
+    const hasPhotos = selectedPhotos.length > 0;
+    setSubmitPhase(hasPhotos ? "Uploading photos & verifying details..." : "Generating valuation offer...");
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 35000);
 
     try {
       const formDataPayload = new FormData();
@@ -192,7 +198,7 @@ export function StepValuation() {
       formDataPayload.append("expectedPrice", String(expectedPrice));
       formDataPayload.append("hp_website", honeypot);
 
-      // Append binary files for server-side Cloudinary upload
+      // Append binary files for server-side Cloudinary parallel upload
       selectedPhotos.forEach((item) => {
         formDataPayload.append("files", item.file);
       });
@@ -200,7 +206,11 @@ export function StepValuation() {
       const res = await fetch("/api/leads", {
         method: "POST",
         body: formDataPayload,
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
+      setSubmitPhase("Saving valuation & preparing WhatsApp...");
 
       const data = await res.json();
 
@@ -222,6 +232,7 @@ export function StepValuation() {
 
       // Automated WhatsApp Client Redirect (Option D)
       if (data.whatsappUrl) {
+        setSubmitPhase("Opening WhatsApp...");
         let newTab: Window | null = null;
         try {
           newTab = window.open(data.whatsappUrl, "_blank");
@@ -235,11 +246,20 @@ export function StepValuation() {
         }
       }
     } catch (err: unknown) {
+      clearTimeout(timeoutId);
       console.error("Submission error:", err);
-      const msg = err instanceof Error ? err.message : "Failed to submit. Please check your connection.";
+      let msg = "Failed to submit. Please check your connection.";
+      if (err instanceof Error) {
+        if (err.name === "AbortError") {
+          msg = "Submission timed out due to slow network. Please check your connection and retry.";
+        } else {
+          msg = err.message;
+        }
+      }
       setSubmitError(msg);
     } finally {
       setIsSubmitting(false);
+      setSubmitPhase("");
     }
   };
 
@@ -462,7 +482,7 @@ export function StepValuation() {
           {isSubmitting ? (
             <>
               <Loader2 className="size-4 animate-spin" />
-              <span>Submitting...</span>
+              <span>{submitPhase || "Submitting..."}</span>
             </>
           ) : (
             <>

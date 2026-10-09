@@ -153,7 +153,7 @@ export default function ContactPage() {
               </div>
               <div className="p-3.5 rounded-xl bg-white border border-slate-200 flex items-center gap-2.5">
                 <Award className="size-5 text-primary shrink-0" />
-                <span className="font-semibold text-slate-800">12 Months Warranty Included</span>
+                <span className="font-semibold text-slate-800">6 Months Warranty Included</span>
               </div>
             </div>
           </div>

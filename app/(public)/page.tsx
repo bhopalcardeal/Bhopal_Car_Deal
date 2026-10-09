@@ -1,5 +1,5 @@
 import React from "react";
-import { prisma, PUBLIC_CAR_SELECT, type PublicCarListing } from "@/lib/db";
+import { prisma, PUBLIC_CAR_CARD_SELECT, type PublicCarCardListing } from "@/lib/db";
 import type { Testimonial, FAQ } from "@prisma/client";
 import { HeroSection } from "@/components/home/hero-section";
 import { TrustSection } from "@/components/home/trust-section";
@@ -11,8 +11,8 @@ import { FAQsSection } from "@/components/home/faqs-section";
 export const revalidate = 300;
 
 export default async function HomePage() {
-  let liveCars: PublicCarListing[] = [];
-  let soldCars: PublicCarListing[] = [];
+  let liveCars: PublicCarCardListing[] = [];
+  let soldCars: PublicCarCardListing[] = [];
   let totalCarsCount = 0;
   let testimonials: Testimonial[] = [];
   let faqs: FAQ[] = [];
@@ -24,14 +24,14 @@ export default async function HomePage() {
           where: {
             status: "LIVE",
           },
-          select: PUBLIC_CAR_SELECT,
+          select: PUBLIC_CAR_CARD_SELECT,
           orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
         }),
         prisma.carListing.findMany({
           where: {
             status: "SOLD",
           },
-          select: PUBLIC_CAR_SELECT,
+          select: PUBLIC_CAR_CARD_SELECT,
           orderBy: { updatedAt: "desc" },
         }),
         prisma.testimonial.findMany({

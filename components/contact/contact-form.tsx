@@ -21,10 +21,14 @@ export function ContactForm() {
     setIsSubmitting(true);
     setError(null);
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
+
     try {
       const res = await fetch("/api/enquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
         body: JSON.stringify({
           name,
           phone,
@@ -34,6 +38,7 @@ export function ContactForm() {
         }),
       });
 
+      clearTimeout(timeoutId);
       const data = await res.json();
 
       if (!res.ok || !data.success) {
@@ -58,8 +63,13 @@ export function ContactForm() {
           window.location.href = data.whatsappUrl;
         }
       }
-    } catch {
-      setError("An unexpected error occurred. Please call or WhatsApp us.");
+    } catch (err) {
+      clearTimeout(timeoutId);
+      if (err instanceof Error && err.name === "AbortError") {
+        setError("Request timed out due to slow network. Please check your connection and retry.");
+      } else {
+        setError("An unexpected error occurred. Please call or WhatsApp us.");
+      }
     } finally {
       setIsSubmitting(false);
     }

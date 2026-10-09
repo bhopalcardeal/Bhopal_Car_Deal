@@ -23,7 +23,7 @@ async function updateDbBranding() {
     where: { id: "cmu15uljm002bvhooksuc70xj" },
     data: {
       city: "Bhopal",
-      quote: "Bhopal Car Deal managed the entire RC transfer at the RTO without me lifting a finger. The 12-month comprehensive warranty gives genuine peace of mind.",
+      quote: "Bhopal Car Deal managed the entire RC transfer at the RTO without me lifting a finger. The 6-month comprehensive warranty gives genuine peace of mind.",
     },
   });
   console.log("✅ Updated 3 Testimonials in database.");

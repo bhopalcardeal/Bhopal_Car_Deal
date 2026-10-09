@@ -421,7 +421,7 @@ export default function StyleGuidePage() {
                     2.0L Turbo Petrol • 258 BHP • Automatic • 28,400 KM • DL RTO
                   </TabsContent>
                   <TabsContent value="warranty" className="p-3 text-sm text-muted-foreground">
-                    12-Month Comprehensive Dealership Warranty included + 150-Point Inspection Report.
+                    6-Month Comprehensive Dealership Warranty included + 150-Point Inspection Report.
                   </TabsContent>
                 </Tabs>
               </CardContent>
@@ -602,7 +602,7 @@ export default function StyleGuidePage() {
                   { text: "150+ Checkpoint Certified", badge: "Inspection" },
                   { text: "7-Day Money Back Guarantee", badge: "Trust" },
                   { text: "Free RC Transfer", badge: "RTO" },
-                  { text: "Comprehensive 1-Yr Warranty", badge: "Protection" },
+                  { text: "Comprehensive 6-Month Warranty", badge: "Protection" },
                   { text: "Instant Online Car Valuation", badge: "Sell Car" },
                   { text: "Lowest Pan-India EMI Rates", badge: "Finance" },
                 ].map((item, idx) => (

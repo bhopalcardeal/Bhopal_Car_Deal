@@ -49,13 +49,13 @@ export function AdminSidebar() {
       {/* Brand Header */}
       <div className="space-y-6">
         <Link href="/admin/dashboard" className="flex items-center px-1">
-          <div className="relative h-11 w-full overflow-hidden rounded-xl bg-black px-2 py-1 border border-slate-200 flex items-center justify-center shadow-xs">
+          <div className="relative flex items-center justify-center py-1">
             <Image
-              src="/images/logo-horizontal.jpg"
+              src="/images/bhopal-car-deal-brand-logo.png"
               alt="Bhopal Car Deal Admin"
-              width={190}
-              height={48}
-              className="h-9 w-auto object-contain"
+              width={200}
+              height={55}
+              className="h-10 w-auto object-contain mix-blend-multiply"
               priority
             />
           </div>

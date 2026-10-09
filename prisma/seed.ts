@@ -892,7 +892,7 @@ async function main() {
       city: "Bhopal",
       photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
       quote:
-        "Bhopal Car Deal managed the entire RC transfer at the RTO without me lifting a finger. The 12-month comprehensive warranty gives genuine peace of mind.",
+        "Bhopal Car Deal managed the entire RC transfer at the RTO without me lifting a finger. The 6-month comprehensive warranty gives genuine peace of mind.",
       carBought: "2021 Porsche Macan",
       rating: 5,
       featured: true,
@@ -925,7 +925,7 @@ async function main() {
     {
       question: "What warranty coverage is included with my purchase?",
       answer:
-        "Every certified vehicle comes with a complimentary 12-Month / 15,000 KM powertrain warranty covering engine, transmission, and drivetrain components, backed by roadside assistance.",
+        "Every certified vehicle comes with a complimentary 6-Month / 7,500 KM powertrain warranty covering engine, transmission, and drivetrain components, backed by roadside assistance.",
       category: "Warranty",
       order: 3,
       active: true,
@@ -957,7 +957,7 @@ async function main() {
   const bannersData = [
     {
       title: "Bhopal's Premier Certified Pre-Owned Collection",
-      subtitle: "150+ Checkpoint Certified • 12-Month Warranty Included • Transparent Fixed Pricing",
+      subtitle: "150+ Checkpoint Certified • 6-Month Warranty Included • Transparent Fixed Pricing",
       image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=85",
       link: "/cars",
       order: 1,

@@ -52,13 +52,13 @@ export function AdminHeader() {
           <SheetContent side="left" className="w-[280px] bg-white border-slate-200 text-slate-900 p-4">
             <SheetHeader className="pb-4 border-b border-slate-200">
               <SheetTitle>
-                <div className="relative h-10 w-[180px] overflow-hidden rounded-xl bg-black px-2 py-1 border border-slate-200 flex items-center justify-center">
+                <div className="relative flex items-center py-0.5">
                   <Image
-                    src="/images/logo-horizontal.jpg"
-                    alt="Bhopal Car Deal"
+                    src="/images/bhopal-car-deal-brand-logo.png"
+                    alt="Bhopal Car Deal Admin"
                     width={180}
-                    height={40}
-                    className="h-8 w-auto object-contain"
+                    height={50}
+                    className="h-9 w-auto object-contain mix-blend-multiply"
                   />
                 </div>
               </SheetTitle>

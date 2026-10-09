@@ -2,26 +2,25 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   formatPriceINR,
   formatKm,
   calculateStartingEmi,
   formatEmiPerMonth,
 } from "@/lib/utils/formatters";
-import type { PublicCarListing } from "@/lib/db";
+import type { PublicCarListing, PublicCarCardListing } from "@/lib/db";
 import {
   Fuel,
   Gauge,
   Calendar,
-  ChevronRight,
   Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getOptimizedImageUrl } from "@/lib/utils/image";
+import { ViewCarButton } from "@/components/cars/view-car-button";
 
 interface CarCardProps {
-  car: PublicCarListing;
+  car: PublicCarCardListing | PublicCarListing;
   priorityImage?: boolean;
   className?: string;
 }
@@ -39,7 +38,7 @@ export function CarCard({ car, priorityImage = false, className }: CarCardProps)
       )}
     >
       {/* Media / Image Container (Fixed 16/10 Aspect Ratio) */}
-      <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-muted">
+      <Link href={`/cars/${car.slug}`} prefetch={true} className="block relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-muted focus:outline-none">
         <Image
           src={getOptimizedImageUrl(car.coverImage, { width: 720 })}
           alt={car.title}
@@ -100,13 +99,13 @@ export function CarCard({ car, priorityImage = false, className }: CarCardProps)
             </div>
           )}
         </div>
-      </div>
+      </Link>
 
       {/* Details Container with Fixed Vertical Rhythm */}
       <div className="flex flex-1 flex-col justify-between p-5 space-y-4">
         <div className="space-y-2.5">
           {/* Title with Fixed Height (min-h-[3rem]) */}
-          <Link href={`/cars/${car.slug}`} className="block focus:outline-none">
+          <Link href={`/cars/${car.slug}`} prefetch={true} className="block focus:outline-none">
             <h3 className="line-clamp-2 min-h-[3rem] text-base font-bold text-foreground transition-colors group-hover:text-primary leading-snug">
               {car.title}
             </h3>
@@ -186,20 +185,7 @@ export function CarCard({ car, priorityImage = false, className }: CarCardProps)
             </span>
           </div>
 
-          <Button
-            asChild
-            size="sm"
-            variant={isSold ? "outline" : "default"}
-            className={cn(
-              "gap-1 px-3.5 font-semibold shrink-0",
-              isSold && "border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
-            )}
-          >
-            <Link href={`/cars/${car.slug}`}>
-              <span>{isSold ? "View (Sold)" : "View"}</span>
-              <ChevronRight className="size-3.5" />
-            </Link>
-          </Button>
+          <ViewCarButton slug={car.slug} isSold={isSold} />
         </div>
       </div>
     </div>

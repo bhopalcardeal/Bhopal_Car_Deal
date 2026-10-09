@@ -3,12 +3,12 @@
 import React from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { CarCard } from "@/components/cars/car-card";
-import type { PublicCarListing } from "@/lib/db";
+import type { PublicCarListing, PublicCarCardListing } from "@/lib/db";
 import { Car, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface CarGridProps {
-  cars: PublicCarListing[];
+  cars: (PublicCarCardListing | PublicCarListing)[];
   onResetFilters?: () => void;
 }
 

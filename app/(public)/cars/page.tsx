@@ -2,7 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import {
   prisma,
-  PUBLIC_CAR_SELECT,
+  PUBLIC_CAR_CARD_SELECT,
 } from "@/lib/db";
 import {
   CarBodyType,
@@ -129,7 +129,7 @@ export default async function CarsPage({ searchParams }: CarsPageProps) {
   const [cars, totalCount, brandRecords] = await Promise.all([
     prisma.carListing.findMany({
       where,
-      select: PUBLIC_CAR_SELECT,
+      select: PUBLIC_CAR_CARD_SELECT,
       orderBy,
       skip: (page - 1) * ITEMS_PER_PAGE,
       take: ITEMS_PER_PAGE,
