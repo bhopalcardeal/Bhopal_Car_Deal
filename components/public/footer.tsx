@@ -68,14 +68,14 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand Col */}
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/" className="inline-flex items-center group">
-              <div className="relative h-14 w-[210px] sm:w-[230px] overflow-hidden rounded-xl bg-black px-2.5 py-1.5 border border-border/80 shadow-xs flex items-center justify-center">
+            <Link href="/" className="inline-flex items-center group py-1" aria-label="Bhopal Car Deal Home">
+              <div className="relative flex items-center">
                 <Image
-                  src="/images/logo-horizontal.jpg"
-                  alt="Bhopal Car Deal - Pre-Owned Cars Showroom"
+                  src="/images/bhopal-car-deal-brand-logo.png"
+                  alt="Bhopal Car Deal - Verified Pre-Owned Vehicles"
                   width={230}
-                  height={60}
-                  className="h-11 sm:h-12 w-auto object-contain"
+                  height={64}
+                  className="h-12 sm:h-13 w-auto object-contain mix-blend-multiply transition-transform duration-200 group-hover:scale-[1.02]"
                 />
               </div>
             </Link>

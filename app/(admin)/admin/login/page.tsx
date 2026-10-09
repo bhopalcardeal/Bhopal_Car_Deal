@@ -59,13 +59,13 @@ function LoginForm() {
       <div className="w-full max-w-md space-y-8">
         {/* Brand Header */}
         <div className="flex flex-col items-center text-center space-y-3">
-          <div className="relative h-14 w-[230px] overflow-hidden rounded-2xl bg-black px-3 py-1.5 border border-slate-200 shadow-md flex items-center justify-center">
+          <div className="relative flex items-center justify-center py-1">
             <Image
-              src="/images/logo-horizontal.jpg"
-              alt="Bhopal Car Deal"
-              width={220}
-              height={56}
-              className="h-11 w-auto object-contain"
+              src="/images/bhopal-car-deal-brand-logo.png"
+              alt="Bhopal Car Deal Admin Portal"
+              width={240}
+              height={66}
+              className="h-14 sm:h-16 w-auto object-contain mix-blend-multiply"
               priority
             />
           </div>

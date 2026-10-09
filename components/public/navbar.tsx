@@ -54,14 +54,14 @@ export function Navbar() {
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center group py-0.5">
-          <div className="relative h-12 w-[185px] sm:w-[210px] overflow-hidden rounded-xl bg-black px-2 py-1 shadow-xs transition-transform duration-200 group-hover:scale-102 flex items-center justify-center border border-slate-200/80">
+        <Link href="/" className="flex items-center group py-1" aria-label="Bhopal Car Deal">
+          <div className="relative flex items-center">
             <Image
-              src="/images/logo-horizontal.jpg"
-              alt="Bhopal Car Deal - Pre-Owned Cars Showroom"
+              src="/images/bhopal-car-deal-brand-logo.png"
+              alt="Bhopal Car Deal - Verified Pre-Owned Vehicles Since 2004"
               width={210}
-              height={54}
-              className="h-10 sm:h-11 w-auto object-contain"
+              height={58}
+              className="h-11 sm:h-12 w-auto object-contain mix-blend-multiply transition-transform duration-200 group-hover:scale-[1.02]"
               priority
             />
           </div>
@@ -140,13 +140,13 @@ export function Navbar() {
             <SheetContent side="right" className="w-[300px] p-6">
               <SheetHeader className="text-left border-b pb-4 mb-4">
                 <SheetTitle className="flex items-center">
-                  <div className="relative h-12 w-[190px] overflow-hidden rounded-xl bg-black px-2 py-1 border border-border flex items-center justify-center">
+                  <div className="relative flex items-center">
                     <Image
-                      src="/images/logo-horizontal.jpg"
+                      src="/images/bhopal-car-deal-brand-logo.png"
                       alt="Bhopal Car Deal"
-                      width={190}
+                      width={180}
                       height={50}
-                      className="h-10 w-auto object-contain"
+                      className="h-10 w-auto object-contain mix-blend-multiply"
                     />
                   </div>
                 </SheetTitle>
